@@ -58,27 +58,34 @@ export type RepoData = {
 	owner: string;
 };
 
-// Type definition for a comment on a GitHub issue
-export interface CommentData {
-	id: number; // Unique identifier for the comment
+export interface CommentAPIResponse {
+	id: number;
 	user: {
-		login: string; // Username of the commenter
-		avatarUrl: string; // URL of the commenter's avatar
+		login: string;
+		avatar_url: string;
 	};
-	body: string; // The body of the comment
-	createdAt: string; // The creation date of the comment
+	body: string;
+	created_at: string;
+}
+export interface CommentData {
+	id: number;
+	user: {
+		login: string;
+		avatarUrl: string;
+	};
+	body: string;
+	createdAt: string;
 }
 
-// Type definition for the details of a GitHub issue, including comments and reactions
 export interface IssueDetailsData {
-	number: number; // Unique identifier for the issue
-	htmlUrl: string; // URL to view the issue on GitHub
-	repoOwner: string; // Owner of the repository where the issue is located
-	repoName: string; // Name of the repository where the issue is located
-	title: string; // Title of the issue
-	userName: string; // Username of the issue creator
-	avatarUrl: string; // URL of the issue creator's avatar
-	content: string; // Body content of the issue
-	comments: CommentData[]; // Array of comments on the issue
-	reactions: ReactionData[]; // Array of reactions to the issue
+	number: number;
+	htmlUrl: string;
+	repoOwner: string;
+	repoName: string;
+	title: string;
+	userName: string;
+	avatarUrl: string;
+	content: string;
+	comments: CommentData[];
+	reactions: ReactionData[];
 }

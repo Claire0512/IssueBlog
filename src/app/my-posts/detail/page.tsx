@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 
 import { fetchIssueDetails } from '@/src/lib/actions';
-import type { IssueDetailsData, CustomSession } from '@/src/lib/type';
+import type { IssueDetailsData, CustomSession, ReactionData } from '@/src/lib/type';
 
 function IssueDetailsPage() {
 	const { data: session } = useSession();
@@ -34,6 +34,17 @@ function IssueDetailsPage() {
 		fetchDetails();
 	}, [session, issueId]);
 
+	const reactionEmojis: { [key: string]: string } = {
+		'+1': '👍',
+		'-1': '👎',
+		laugh: '😄',
+		hooray: '🎉',
+		confused: '😕',
+		heart: '❤️',
+		rocket: '🚀',
+		eyes: '👀',
+	};
+
 	if (!issueDetails) return <div>Loading...</div>;
 
 	return (
@@ -51,8 +62,21 @@ function IssueDetailsPage() {
 			</div>
 			<p className="mt-4">{issueDetails.content}</p>
 
+			<div className="mt-4">
+				{Object.entries(issueDetails.reactions).map(([key, value]) => {
+					if (key in reactionEmojis && typeof value === 'number' && value > 0) {
+						return (
+							<span key={key} className="mr-2">
+								{reactionEmojis[key]} {value}
+							</span>
+						);
+					}
+					return null;
+				})}
+			</div>
+
 			<h2 className="mb-4 mt-8 text-xl font-bold">Comments</h2>
-			{/* {issueDetails.comments.map((comment) => (
+			{issueDetails.comments.map((comment) => (
 				<div key={comment.id} className="mb-4 rounded-lg border p-4">
 					<div className="flex items-center">
 						<Image
@@ -66,14 +90,7 @@ function IssueDetailsPage() {
 					</div>
 					<p className="mt-2">{comment.body}</p>
 				</div>
-			))} */}
-
-			<h2 className="mb-4 mt-8 text-xl font-bold">Reactions</h2>
-			<div className="flex gap-4">
-				{/* {issueDetails.reactions.map((reaction) => (
-					<span key={reaction.id}>{reaction.content}</span>
-				))} */}
-			</div>
+			))}
 		</div>
 	);
 }

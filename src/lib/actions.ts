@@ -9,8 +9,9 @@ import type {
 	IssueStatistic,
 	CreateIssueParams,
 	GitHubIssueApiResponse,
+	CommentAPIResponse,
 } from './type';
-import type { CommentData, ReactionData, IssueDetailsData } from './type';
+import type { CommentData, IssueDetailsData } from './type';
 
 export const fetchIssueData = async (session: CustomSession | null): Promise<IssueData[]> => {
 	if (!session?.user?.name || !session?.user?.image) {
@@ -29,7 +30,6 @@ export const fetchIssueData = async (session: CustomSession | null): Promise<Iss
 				},
 			},
 		);
-		console.log('issuesResponse: ', issuesResponse.data.items[0]);
 		issuesData = issuesResponse.data.items.map((issue: GitHubIssueApiResponse) => ({
 			number: issue.number,
 			htmlUrl: issue.html_url,
@@ -150,14 +150,14 @@ async function fetchIssueComments(commentUrl: string): Promise<CommentData[]> {
 	const commentsResponse = await axios.get(commentUrl, {
 		headers: { Authorization: `token ${process.env.GITHUB_PAT}` },
 	});
-	return commentsResponse.data.map((comment: CommentData) => ({
+	return commentsResponse.data.map((comment: CommentAPIResponse) => ({
 		id: comment.id,
 		user: {
 			login: comment.user.login,
-			avatar_url: comment.user.avatarUrl,
+			avatarUrl: comment.user.avatar_url,
 		},
 		body: comment.body,
-		created_at: comment.createdAt,
+		createdAt: comment.created_at,
 	}));
 }
 
@@ -181,11 +181,8 @@ export const fetchIssueDetails = async (
 			},
 		);
 		const issue: GitHubIssueApiResponse = issueResponse.data;
-		// console.log("issue: ", issue);
 		const comments = await fetchIssueComments(issue.comments_url ?? '');
-		console.log('comments: ', comments);
 		const reactions = issue.reactions;
-		// console.log("reactions: ", reactions);
 		return {
 			number: issue.number,
 			htmlUrl: issue.html_url,
@@ -200,7 +197,6 @@ export const fetchIssueDetails = async (
 		};
 	} catch (error) {
 		console.error('Error fetching issue details:', error);
-		// Handle the error as needed, e.g., return a default response or rethrow the error
 		throw error;
 	}
 };
