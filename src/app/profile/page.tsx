@@ -7,6 +7,7 @@ import Image from 'next/image';
 
 import SignOutButton from '@/src/components/SignOutButton';
 import { fetchGithubData } from '@/src/lib/actions';
+import type { CustomSession } from '@/src/lib/type';
 
 function ProfilePage() {
 	const [githubData, setGithubData] = useState({
@@ -19,7 +20,7 @@ function ProfilePage() {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const githubData = await fetchGithubData(session);
+			const githubData = await fetchGithubData(session as CustomSession);
 			setGithubData(githubData);
 		};
 		fetchData();
