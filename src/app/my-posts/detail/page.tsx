@@ -58,7 +58,7 @@ function IssueDetailsPage() {
 		};
 		fetchDetails();
 	}, [session, issueId, repoName, repoOwner]);
-
+	console.log(issueDetails?.comments);
 	const reactionEmojis: { [key: string]: string } = {
 		'+1': '👍',
 		'-1': '👎',
@@ -116,6 +116,19 @@ function IssueDetailsPage() {
 						className="prose mt-2"
 						dangerouslySetInnerHTML={{ __html: comment.bodyHtml ?? '...' }}
 					/>
+
+					<div className="mt-2">
+						{Object.entries(comment.reactions).map(([key, value]) => {
+							if (key in reactionEmojis && typeof value === 'number' && value > 0) {
+								return (
+									<span key={key} className="mr-2">
+										{reactionEmojis[key]} {value}
+									</span>
+								);
+							}
+							return null;
+						})}
+					</div>
 				</div>
 			))}
 		</div>

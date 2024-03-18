@@ -10,6 +10,8 @@ import type {
 	CreateIssueParams,
 	GitHubIssueApiResponse,
 	CommentAPIResponse,
+	ReactionData,
+	GitHubReaction,
 } from './type';
 import type { CommentData, IssueDetailsData } from './type';
 
@@ -145,20 +147,72 @@ export const fetchUserRepoList = async (session: CustomSession | null): Promise<
 		return [];
 	}
 };
+function aggregateReactions(reactions: GitHubReaction[]): ReactionData {
+	const initialReactionData: ReactionData = {
+		url: '',
+		total_count: 0,
+		'+1': 0,
+		'-1': 0,
+		laugh: 0,
+		hooray: 0,
+		confused: 0,
+		heart: 0,
+		rocket: 0,
+		eyes: 0,
+	};
 
-async function fetchIssueComments(commentUrl: string): Promise<CommentData[]> {
+	const reactionData = reactions.reduce((acc, reaction) => {
+		if (reaction.content in acc) {
+			acc[reaction.content]++;
+		}
+		acc.total_count++;
+		return acc;
+	}, initialReactionData);
+
+	return reactionData;
+}
+
+async function fetchReactionsForComment(
+	owner: string,
+	repo: string,
+	commentId: number,
+): Promise<ReactionData> {
+	const reactionsUrl = `https://api.github.com/repos/${owner}/${repo}/issues/comments/${commentId}/reactions`;
+	const reactionsResponse = await axios.get(reactionsUrl, {
+		headers: {
+			Authorization: `token ${process.env.GITHUB_PAT}`,
+			Accept: 'application/vnd.github.squirrel-girl-preview+json',
+		},
+	});
+	return aggregateReactions(reactionsResponse.data);
+}
+async function fetchIssueComments(
+	commentUrl: string,
+	repoName: string,
+	repoOwner: string,
+): Promise<CommentData[]> {
 	const commentsResponse = await axios.get(commentUrl, {
 		headers: { Authorization: `token ${process.env.GITHUB_PAT}` },
 	});
-	return commentsResponse.data.map((comment: CommentAPIResponse) => ({
-		id: comment.id,
-		user: {
-			login: comment.user.login,
-			avatarUrl: comment.user.avatar_url,
-		},
-		body: comment.body,
-		createdAt: comment.created_at,
-	}));
+
+	const commentsWithReactions = await Promise.all(
+		commentsResponse.data.map(async (comment: CommentAPIResponse) => {
+			const reactions = await fetchReactionsForComment(repoOwner, repoName, comment.id);
+
+			return {
+				id: comment.id,
+				user: {
+					login: comment.user.login,
+					avatarUrl: comment.user.avatar_url,
+				},
+				body: comment.body,
+				createdAt: comment.created_at,
+				reactions,
+			};
+		}),
+	);
+
+	return commentsWithReactions;
 }
 
 export const fetchIssueDetails = async (
@@ -181,7 +235,7 @@ export const fetchIssueDetails = async (
 			},
 		);
 		const issue: GitHubIssueApiResponse = issueResponse.data;
-		const comments = await fetchIssueComments(issue.comments_url ?? '');
+		const comments = await fetchIssueComments(issue.comments_url ?? '', repoName, repoOwner);
 		const reactions = issue.reactions;
 		return {
 			number: issue.number,

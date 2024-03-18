@@ -23,6 +23,11 @@ export type ReactionData = {
 	rocket: number;
 	eyes: number;
 };
+
+export type GitHubReaction = {
+	content: '+1' | '-1' | 'laugh' | 'confused' | 'heart' | 'hooray' | 'rocket' | 'eyes';
+	}
+
 export type GitHubIssueApiResponse = {
 	number: number;
 	repository_url: string;
@@ -76,6 +81,7 @@ export interface CommentData {
 	body: string;
 	createdAt: string;
 	bodyHtml?: string;
+	reactions: ReactionData;
 }
 
 export interface IssueDetailsData {
