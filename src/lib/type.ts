@@ -26,7 +26,7 @@ export type ReactionData = {
 
 export type GitHubReaction = {
 	content: '+1' | '-1' | 'laugh' | 'confused' | 'heart' | 'hooray' | 'rocket' | 'eyes';
-	}
+};
 
 export type GitHubIssueApiResponse = {
 	number: number;

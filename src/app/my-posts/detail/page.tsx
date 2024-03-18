@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 
-import { fetchIssueDetails } from '@/src/lib/actions';
+import { fetchIssueDetails } from '@/src/lib/githubApi';
 import markdownToHtml from '@/src/lib/markdownToHtml';
 import type { IssueDetailsData, CustomSession } from '@/src/lib/type';
 
