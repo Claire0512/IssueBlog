@@ -7,7 +7,8 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 
 import { fetchIssueDetails } from '@/src/lib/actions';
-import type { IssueDetailsData, CustomSession, ReactionData } from '@/src/lib/type';
+import markdownToHtml from '@/src/lib/markdownToHtml';
+import type { IssueDetailsData, CustomSession } from '@/src/lib/type';
 
 function IssueDetailsPage() {
 	const { data: session } = useSession();
@@ -18,21 +19,45 @@ function IssueDetailsPage() {
 	const repoOwner = searchParams.get('repoOwner');
 
 	const [issueDetails, setIssueDetails] = useState<IssueDetailsData | null>(null);
+	const [issuesHtml, setIssuesHtml] = useState('');
+
+	useEffect(() => {
+		const processMarkdown = async () => {
+			if (issueDetails?.content) {
+				const html = await markdownToHtml(issueDetails.content);
+				setIssuesHtml(html);
+			}
+		};
+
+		processMarkdown();
+	}, [issueDetails]);
 
 	useEffect(() => {
 		const fetchDetails = async () => {
 			if (session && issueId) {
-				const details = await fetchIssueDetails(
+				let details = await fetchIssueDetails(
 					session as CustomSession,
 					repoName ?? '',
 					repoOwner ?? '',
 					parseInt(issueId as string, 10),
 				);
+
+				if (details?.comments) {
+					const processedComments = await Promise.all(
+						details.comments.map(async (comment) => {
+							const html = await markdownToHtml(comment.body);
+							return { ...comment, bodyHtml: html };
+						}),
+					);
+
+					details = { ...details, comments: processedComments };
+				}
+
 				setIssueDetails(details);
 			}
 		};
 		fetchDetails();
-	}, [session, issueId]);
+	}, [session, issueId, repoName, repoOwner]);
 
 	const reactionEmojis: { [key: string]: string } = {
 		'+1': '👍',
@@ -46,7 +71,6 @@ function IssueDetailsPage() {
 	};
 
 	if (!issueDetails) return <div>Loading...</div>;
-
 	return (
 		<div className="p-4">
 			<h1 className="text-2xl font-bold">{issueDetails.title}</h1>
@@ -60,8 +84,7 @@ function IssueDetailsPage() {
 				/>
 				<p>Author: {issueDetails.userName}</p>
 			</div>
-			<p className="mt-4">{issueDetails.content}</p>
-
+			<article className="prose" dangerouslySetInnerHTML={{ __html: issuesHtml }} />
 			<div className="mt-4">
 				{Object.entries(issueDetails.reactions).map(([key, value]) => {
 					if (key in reactionEmojis && typeof value === 'number' && value > 0) {
@@ -88,7 +111,11 @@ function IssueDetailsPage() {
 						/>
 						<span className="ml-2">{comment.user.login}</span>
 					</div>
-					<p className="mt-2">{comment.body}</p>
+
+					<article
+						className="prose mt-2"
+						dangerouslySetInnerHTML={{ __html: comment.bodyHtml ?? '...' }}
+					/>
 				</div>
 			))}
 		</div>

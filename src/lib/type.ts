@@ -75,6 +75,7 @@ export interface CommentData {
 	};
 	body: string;
 	createdAt: string;
+	bodyHtml?: string;
 }
 
 export interface IssueDetailsData {

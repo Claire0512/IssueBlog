@@ -137,8 +137,8 @@ export const fetchUserRepoList = async (session: CustomSession | null): Promise<
 		});
 
 		return response.data.map((repo: RepoData) => ({
-			repoName: repo.name,
-			repoOwner: repo.owner,
+			name: repo.name,
+			owner: repo.owner,
 		}));
 	} catch (error) {
 		console.error('Failed to fetch user repositories:', error);

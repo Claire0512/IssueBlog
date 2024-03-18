@@ -15,6 +15,7 @@ import {
 	SelectItem,
 } from '@/src/components/ui/select';
 import { fetchIssueData, createIssue, fetchUserRepoList } from '@/src/lib/actions';
+import markdownToHtml from '@/src/lib/markdownToHtml';
 import type { CustomSession, RepoData, IssueData } from '@/src/lib/type';
 
 function MyPostsPage() {
@@ -24,6 +25,9 @@ function MyPostsPage() {
 	const [selectedRepo, setSelectedRepo] = useState('');
 	const [issueTitle, setIssueTitle] = useState('');
 	const [issueContent, setIssueContent] = useState('');
+	const [previewMode, setPreviewMode] = useState(false);
+
+	const togglePreviewMode = () => setPreviewMode(!previewMode);
 
 	const [repos, setRepos] = useState<RepoData[]>([]);
 
@@ -39,6 +43,18 @@ function MyPostsPage() {
 		});
 		setShowModal(false);
 	};
+	const [htmlContent, setHtmlContent] = useState('');
+
+	useEffect(() => {
+		const processMarkdown = async () => {
+			if (previewMode && issueContent) {
+				const html = await markdownToHtml(issueContent);
+				setHtmlContent(html);
+			}
+		};
+
+		processMarkdown();
+	}, [previewMode, issueContent]);
 	useEffect(() => {
 		const fetchData = async () => {
 			if (session) {
@@ -56,8 +72,8 @@ function MyPostsPage() {
 		<div className="p-4">
 			<h1 className="mb-4 text-2xl font-bold">My GitHub Issues</h1>
 			<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-				{issues.map((issue) => (
-					<div key={issue.number} className="rounded-lg border p-4">
+				{issues.map((issue, index) => (
+					<div key={index} className="rounded-lg border p-4">
 						<Link
 							href={`/my-posts/detail?issueId=${issue.number}&repoName=${issue.repoName}&repoOwner=${issue.repoOwner}`}
 							className="font-bold"
@@ -88,47 +104,84 @@ function MyPostsPage() {
 
 			{showModal && (
 				<div
-					className="fixed inset-0 h-full w-full overflow-y-auto bg-gray-600 bg-opacity-50"
+					className="fixed inset-0 z-10 overflow-y-auto bg-gray-600 bg-opacity-50"
 					id="my-modal"
 				>
-					<div className="relative top-20 mx-auto w-96 rounded-md border bg-white p-5 shadow-lg">
-						<div className="mt-3 text-center">
-							<div className="mt-2">
+					<div className="relative top-10 mx-auto flex min-h-[80%] w-[60%] flex-col justify-between rounded-md border bg-white p-5 shadow-lg">
+						<h2 className="text-center text-3xl font-bold">New Issue</h2>
+						<div className="flex flex-1 flex-col">
+							<div className="mt-4">
+								<label
+									htmlFor="repo-select"
+									className="block text-sm font-medium text-gray-700"
+								>
+									Repo:
+								</label>
 								<Select onValueChange={setSelectedRepo} value={selectedRepo}>
 									<SelectTrigger aria-label="Repository">
 										<SelectValue placeholder="Select a repository" />
 									</SelectTrigger>
-									<SelectContent>
-										{repos.map((repo) => (
-											<SelectItem key={repo.name} value={repo.name}>
+									<SelectContent className="bg-white">
+										{repos.map((repo, index) => (
+											<SelectItem key={index} value={repo.name}>
 												{repo.name}
 											</SelectItem>
 										))}
 									</SelectContent>
 								</Select>
+							</div>
+							<div className="mt-4">
+								<label
+									htmlFor="issue-title"
+									className="block text-sm font-medium text-gray-700"
+								>
+									Title:
+								</label>
 								<input
 									type="text"
+									id="issue-title"
 									placeholder="Issue Title"
-									className="mt-2 border p-2"
+									className="w-full border px-2 py-2"
 									value={issueTitle}
 									onChange={(e) => setIssueTitle(e.target.value)}
 								/>
-								<textarea
-									placeholder="Issue Content"
-									className="mt-2 border p-2"
-									rows={3}
-									value={issueContent}
-									onChange={(e) => setIssueContent(e.target.value)}
-								></textarea>
 							</div>
-							<div className="items-center px-4 py-3">
-								<button
-									className="w-full rounded-md bg-blue-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
-									onClick={createIssues}
+							<div className="mt-4 flex flex-1 flex-col">
+								<label
+									htmlFor="issue-content"
+									className="block text-sm font-medium text-gray-700"
 								>
-									Submit
-								</button>
+									Content:
+								</label>
+								{previewMode ? (
+									<article
+										className="prose h-full flex-1 overflow-auto border p-2"
+										dangerouslySetInnerHTML={{ __html: htmlContent }}
+									/>
+								) : (
+									<textarea
+										id="issue-content"
+										placeholder="Issue Content"
+										className="h-full w-full flex-1 border p-2"
+										value={issueContent}
+										onChange={(e) => setIssueContent(e.target.value)}
+									/>
+								)}
 							</div>
+						</div>
+						<div className="flex justify-end space-x-2 p-2">
+							<button
+								onClick={togglePreviewMode}
+								className="rounded border px-4 py-2"
+							>
+								{previewMode ? 'Edit' : 'Preview'}
+							</button>
+							<button
+								className="rounded border bg-blue-500 px-4 py-2 text-white"
+								onClick={createIssues}
+							>
+								Submit
+							</button>
 						</div>
 					</div>
 				</div>
