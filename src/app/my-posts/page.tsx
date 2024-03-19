@@ -15,6 +15,7 @@ import {
 	SelectItem,
 } from '@/src/components/ui/select';
 import { fetchIssueData, createIssue, fetchUserRepoList } from '@/src/lib/actions';
+import getTimeDifference from '@/src/lib/getTimeDifference';
 import markdownToHtml from '@/src/lib/markdownToHtml';
 import type { CustomSession, RepoData, IssueData } from '@/src/lib/type';
 
@@ -58,8 +59,15 @@ function MyPostsPage() {
 	useEffect(() => {
 		const fetchData = async () => {
 			if (session) {
-				const issueData = await fetchIssueData(session as CustomSession);
-				setIssues(issueData);
+				let issueData = await fetchIssueData(session as CustomSession);
+				const issuesWithHtmlContent = await Promise.all(
+					issueData.map(async (issue) => {
+						const htmlContent = await markdownToHtml(issue.content);
+						return { ...issue, contentHtml: htmlContent };
+					}),
+				);
+				setIssues(issuesWithHtmlContent);
+
 				const repoData = await fetchUserRepoList(session as CustomSession);
 				setRepos(repoData);
 			}
@@ -74,23 +82,30 @@ function MyPostsPage() {
 			<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 				{issues.map((issue, index) => (
 					<div key={index} className="rounded-lg border p-4">
-						<Link
-							href={`/my-posts/detail?issueId=${issue.number}&repoName=${issue.repoName}&repoOwner=${issue.repoOwner}`}
-							className="font-bold"
-						>
-							{issue.title}
-						</Link>
-						<p className="text-gray-600">{issue.content}</p>
-						<div className="mt-4 flex items-center">
+						<div className="mb-2 flex items-center">
 							<Image
 								src={issue.avatarUrl}
 								width={40}
 								height={40}
 								alt={`Profile Pic for ${issue.userName}`}
-								priority={true}
 								className="rounded-full"
 							/>
-							<span>{issue.userName}</span>
+							<span className="ml-2">{issue.userName}</span>
+							<span className="ml-auto">{getTimeDifference(issue.created_at)}</span>
+						</div>
+						<div className="mb-2">
+							<Link
+								href={`/my-posts/detail?issueId=${issue.number}&repoName=${issue.repoName}&repoOwner=${issue.repoOwner}`}
+								className="text-xl font-bold"
+							>
+								{issue.title}
+							</Link>
+						</div>
+						<div>
+							<article
+								className="prose text-sm"
+								dangerouslySetInnerHTML={{ __html: issue.contentHtml ?? '...' }}
+							/>
 						</div>
 					</div>
 				))}

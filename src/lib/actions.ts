@@ -37,6 +37,7 @@ export const fetchIssueData = async (session: CustomSession | null): Promise<Iss
 			content: issue.body,
 			repoOwner: issue.repository_url.split('/')[4],
 			repoName: issue.repository_url.split('/')[5],
+			created_at: issue.created_at,
 		}));
 	} catch (error) {
 		console.error('Failed to fetch GitHub issues:', error);

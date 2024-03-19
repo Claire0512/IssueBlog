@@ -9,6 +9,8 @@ export type IssueData = {
 	userName: string;
 	avatarUrl: string;
 	content: string;
+	contentHtml?: string;
+	created_at: string;
 };
 
 export type ReactionData = {
@@ -40,6 +42,7 @@ export type GitHubIssueApiResponse = {
 	};
 	reactions?: ReactionData[];
 	comments_url?: string;
+	created_at: string;
 };
 
 export type IssueStatistic = {

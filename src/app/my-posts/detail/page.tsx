@@ -144,7 +144,9 @@ function IssueDetailsPage() {
 						)}
 					</div>
 
-					<button onClick={handleSaveClick} disabled={!editedTitle.trim()}>Save</button>
+					<button onClick={handleSaveClick} disabled={!editedTitle.trim()}>
+						Save
+					</button>
 					<button onClick={handleCancelClick}>Cancel</button>
 					<button onClick={handlePreviewClick}>
 						{previewMode ? 'Back to Edit' : 'Preview'}
