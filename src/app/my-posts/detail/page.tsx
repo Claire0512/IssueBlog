@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 
-import { fetchIssueDetails } from '@/src/lib/githubApi';
+import { fetchIssueDetails, updateIssue } from '@/src/lib/githubApi';
 import markdownToHtml from '@/src/lib/markdownToHtml';
 import type { IssueDetailsData, CustomSession } from '@/src/lib/type';
 
@@ -20,45 +20,76 @@ function IssueDetailsPage() {
 
 	const [issueDetails, setIssueDetails] = useState<IssueDetailsData | null>(null);
 	const [issuesHtml, setIssuesHtml] = useState('');
+	const [isEditing, setIsEditing] = useState(false);
+	const [editedTitle, setEditedTitle] = useState('');
+	const [editedContent, setEditedContent] = useState('');
+	const isAuthor = session?.user?.name === issueDetails?.userName;
+	const handleEditClick = () => setIsEditing(true);
+	const [previewMode, setPreviewMode] = useState(false);
+	const handlePreviewClick = async () => {
+		if (!previewMode) {
+			const html = await markdownToHtml(editedContent);
+			setIssuesHtml(html);
+		}
+		setPreviewMode(!previewMode);
+	};
+
+	const handleCancelClick = () => {
+		setIsEditing(false);
+		setEditedTitle(issueDetails?.title || '');
+		setEditedContent(issueDetails?.content || '');
+	};
+
+	const handleSaveClick = async () => {
+		if (session && repoName && repoOwner && issueId) {
+			await updateIssue({
+				session: session as CustomSession,
+				repoOwner,
+				repoName,
+				issueNumber: parseInt(issueId, 10),
+				title: editedTitle,
+				body: editedContent,
+			});
+			setIsEditing(false);
+		}
+	};
 
 	useEffect(() => {
-		const processMarkdown = async () => {
-			if (issueDetails?.content) {
-				const html = await markdownToHtml(issueDetails.content);
-				setIssuesHtml(html);
-			}
-		};
+		const fetchAndProcessIssueDetails = async () => {
+			if (!session || !issueId) return;
 
-		processMarkdown();
-	}, [issueDetails]);
-
-	useEffect(() => {
-		const fetchDetails = async () => {
-			if (session && issueId) {
-				let details = await fetchIssueDetails(
+			try {
+				const details = await fetchIssueDetails(
 					session as CustomSession,
 					repoName ?? '',
 					repoOwner ?? '',
-					parseInt(issueId as string, 10),
+					parseInt(issueId, 10),
 				);
 
-				if (details?.comments) {
-					const processedComments = await Promise.all(
-						details.comments.map(async (comment) => {
-							const html = await markdownToHtml(comment.body);
-							return { ...comment, bodyHtml: html };
-						}),
-					);
+				const processedComments = await Promise.all(
+					details.comments.map(async (comment) => {
+						const html = await markdownToHtml(comment.body);
+						return { ...comment, bodyHtml: html };
+					}),
+				);
 
-					details = { ...details, comments: processedComments };
+				setIssueDetails({ ...details, comments: processedComments });
+
+				if (details.content) {
+					const contentHtml = await markdownToHtml(details.content);
+					setIssuesHtml(contentHtml);
 				}
 
-				setIssueDetails(details);
+				setEditedTitle(details.title || '');
+				setEditedContent(details.content || '');
+			} catch (error) {
+				console.error('Failed to fetch or process issue details:', error);
 			}
 		};
-		fetchDetails();
+
+		fetchAndProcessIssueDetails();
 	}, [session, issueId, repoName, repoOwner]);
-	console.log(issueDetails?.comments);
+
 	const reactionEmojis: { [key: string]: string } = {
 		'+1': '👍',
 		'-1': '👎',
@@ -73,18 +104,70 @@ function IssueDetailsPage() {
 	if (!issueDetails) return <div>Loading...</div>;
 	return (
 		<div className="p-4">
-			<h1 className="text-2xl font-bold">{issueDetails.title}</h1>
-			<div className="mt-4">
-				<Image
-					src={issueDetails.avatarUrl}
-					alt="Author's avatar"
-					width={50}
-					height={50}
-					className="rounded-full"
-				/>
-				<p>Author: {issueDetails.userName}</p>
-			</div>
-			<article className="prose" dangerouslySetInnerHTML={{ __html: issuesHtml }} />
+			{isEditing ? (
+				<div className="flex flex-col gap-4">
+					<div className="mt-4">
+						<label
+							htmlFor="issue-title"
+							className="block text-sm font-medium text-gray-700"
+						>
+							Title:
+						</label>
+						<input
+							id="issue-title"
+							value={editedTitle}
+							onChange={(e) => setEditedTitle(e.target.value)}
+							className="title-input"
+							placeholder="Enter title here"
+						/>
+					</div>
+					<div className="mt-4 flex flex-1 flex-col">
+						<label
+							htmlFor="issue-content"
+							className="block text-sm font-medium text-gray-700"
+						>
+							Content:
+						</label>
+						{previewMode ? (
+							<article
+								className="prose p-4"
+								dangerouslySetInnerHTML={{ __html: issuesHtml }}
+							/>
+						) : (
+							<textarea
+								id="issue-content"
+								value={editedContent}
+								onChange={(e) => setEditedContent(e.target.value)}
+								className="content-textarea"
+								placeholder="Enter markdown content here"
+							/>
+						)}
+					</div>
+
+					<button onClick={handleSaveClick} disabled={!editedTitle.trim()}>Save</button>
+					<button onClick={handleCancelClick}>Cancel</button>
+					<button onClick={handlePreviewClick}>
+						{previewMode ? 'Back to Edit' : 'Preview'}
+					</button>
+				</div>
+			) : (
+				<>
+					<h1 className="text-2xl font-bold">{issueDetails.title}</h1>
+					<div className="mt-4">
+						<Image
+							src={issueDetails.avatarUrl}
+							alt="Author's avatar"
+							width={50}
+							height={50}
+							className="rounded-full"
+						/>
+						<p>Author: {issueDetails.userName}</p>
+					</div>
+					<article className="prose" dangerouslySetInnerHTML={{ __html: issuesHtml }} />
+					{isAuthor && <button onClick={handleEditClick}>Edit</button>}
+				</>
+			)}
+
 			<div className="mt-4">
 				{Object.entries(issueDetails.reactions).map(([key, value]) => {
 					if (key in reactionEmojis && typeof value === 'number' && value > 0) {

@@ -1,5 +1,3 @@
-'use server';
-
 import type { ReactionData, GitHubReaction } from './type';
 
 export function aggregateReactions(reactions: GitHubReaction[]): ReactionData {

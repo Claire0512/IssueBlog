@@ -8,6 +8,7 @@ import type {
 	GitHubIssueApiResponse,
 	CommentAPIResponse,
 	ReactionData,
+	UpdateIssueParams,
 } from './type';
 import type { CommentData, IssueDetailsData } from './type';
 
@@ -93,3 +94,37 @@ async function fetchReactionsForComment(
 	});
 	return aggregateReactions(reactionsResponse.data);
 }
+
+export const updateIssue = async ({
+	repoOwner,
+	repoName,
+	issueNumber,
+	title,
+	body,
+	session,
+}: UpdateIssueParams): Promise<void> => {
+	if (!session || !repoOwner || !repoName || !issueNumber) {
+		console.error('Missing required parameters or session information');
+		return;
+	}
+
+	try {
+		const response = await axios.patch(
+			`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${issueNumber}`,
+			{
+				title,
+				body,
+			},
+			{
+				headers: {
+					Authorization: `token ${session.accessToken}`,
+					Accept: 'application/vnd.github.v3+json',
+				},
+			},
+		);
+
+		console.log('Issue updated successfully:', response.data);
+	} catch (error) {
+		console.error('Failed to update GitHub issue:', error);
+	}
+};

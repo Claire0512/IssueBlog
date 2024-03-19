@@ -96,3 +96,12 @@ export interface IssueDetailsData {
 	comments: CommentData[];
 	reactions: ReactionData[];
 }
+
+export type UpdateIssueParams = {
+	repoOwner: string;
+	repoName: string;
+	issueNumber: number;
+	title: string;
+	body: string;
+	session: CustomSession | null;
+};
