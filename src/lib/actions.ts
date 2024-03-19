@@ -11,7 +11,11 @@ import type {
 	GitHubIssueApiResponse,
 } from './type';
 
-export const fetchIssueData = async (session: CustomSession | null): Promise<IssueData[]> => {
+export const fetchIssueData = async (
+	session: CustomSession | null,
+	page: number,
+	perPage = 5,
+): Promise<IssueData[]> => {
 	if (!session?.user?.name || !session?.user?.image) {
 		return [];
 	}
@@ -21,7 +25,7 @@ export const fetchIssueData = async (session: CustomSession | null): Promise<Iss
 	let issuesData: IssueData[] = [];
 	try {
 		const issuesResponse = await axios.get(
-			`https://api.github.com/search/issues?q=author:${username}+is:issue+user:${username}&sort=created&order=desc`,
+			`https://api.github.com/search/issues?q=author:${username}+is:issue+user:${username}&sort=created&order=desc&page=${page}&per_page=${perPage}`,
 			{
 				headers: {
 					Authorization: `token ${process.env.GITHUB_PAT}`,

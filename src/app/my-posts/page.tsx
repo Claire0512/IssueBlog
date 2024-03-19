@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import React from 'react';
 
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import { useScroll } from '@react-hooks-library/core';
 
 import {
 	Select,
@@ -31,6 +33,15 @@ function MyPostsPage() {
 	const togglePreviewMode = () => setPreviewMode(!previewMode);
 
 	const [repos, setRepos] = useState<RepoData[]>([]);
+	const [page, setPage] = useState(1);
+	const [hasMore, setHasMore] = useState(true);
+	const [scroll, setScroll] = useState({ x: NaN, y: NaN });
+
+	const refScroll = useRef<HTMLDivElement>(null);
+	useScroll(refScroll, ({ scrollX, scrollY }) => setScroll({ x: scrollX, y: scrollY }));
+
+	const cantScroll = refScroll.current?.scrollHeight === refScroll.current?.clientHeight;
+	const isBottom = scroll.y > 0.9 || cantScroll;
 
 	const createIssues = async () => {
 		const owner = selectedRepo.split('/')[0];
@@ -56,18 +67,37 @@ function MyPostsPage() {
 
 		processMarkdown();
 	}, [previewMode, issueContent]);
+
 	useEffect(() => {
 		const fetchData = async () => {
-			if (session) {
-				let issueData = await fetchIssueData(session as CustomSession);
+			if (session && hasMore) {
+				if (issues.length < (page - 1) * 5) {
+					console.log('Not yet loaded');
+					return;
+				}
+				const issueData = await fetchIssueData(session as CustomSession, page);
+				if (issueData.length < 5) {
+					setHasMore(false);
+				}
 				const issuesWithHtmlContent = await Promise.all(
 					issueData.map(async (issue) => {
 						const htmlContent = await markdownToHtml(issue.content);
 						return { ...issue, contentHtml: htmlContent };
 					}),
 				);
-				setIssues(issuesWithHtmlContent);
+				setIssues((prevIssues) => [...prevIssues, ...issuesWithHtmlContent]);
+				setPage(page + 1);
+			}
+		};
+		if (isBottom || cantScroll) {
+			console.log('Fetching data...');
+			fetchData();
+		}
+	}, [isBottom, session, cantScroll, page]);
 
+	useEffect(() => {
+		const fetchData = async () => {
+			if (session) {
 				const repoData = await fetchUserRepoList(session as CustomSession);
 				setRepos(repoData);
 			}
@@ -77,7 +107,7 @@ function MyPostsPage() {
 	}, [session]);
 
 	return (
-		<div className="p-4">
+		<div className="h-screen overflow-auto p-4" ref={refScroll}>
 			<h1 className="mb-4 text-2xl font-bold">My GitHub Issues</h1>
 			<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 				{issues.map((issue, index) => (
@@ -109,6 +139,7 @@ function MyPostsPage() {
 						</div>
 					</div>
 				))}
+				{hasMore && <div>Loading more...</div>}
 			</div>
 			<button
 				className="fixed bottom-4 right-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
