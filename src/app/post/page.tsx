@@ -70,8 +70,10 @@ function MyPostsPage() {
 
 	useEffect(() => {
 		const fetchData = async () => {
+			console.log(issues.length, page, hasMore, isBottom, cantScroll);
 			if (session && hasMore) {
 				if (issues.length < (page - 1) * 5) {
+					// console.log(issues.length, page, hasMore, isBottom, cantScroll);
 					console.log('Not yet loaded');
 					return;
 				}
@@ -79,13 +81,7 @@ function MyPostsPage() {
 				if (issueData.length < 5) {
 					setHasMore(false);
 				}
-				const issuesWithHtmlContent = await Promise.all(
-					issueData.map(async (issue) => {
-						const htmlContent = await markdownToHtml(issue.content);
-						return { ...issue, contentHtml: htmlContent };
-					}),
-				);
-				setIssues((prevIssues) => [...prevIssues, ...issuesWithHtmlContent]);
+				setIssues(issueData);
 				setPage(page + 1);
 			}
 		};
@@ -109,7 +105,7 @@ function MyPostsPage() {
 	return (
 		<div className="h-screen overflow-auto p-4" ref={refScroll}>
 			<h1 className="mb-4 text-2xl font-bold">My GitHub Issues</h1>
-			<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+			<div className="mt-52 flex flex-col gap-4">
 				{issues.map((issue, index) => (
 					<div key={index} className="rounded-lg border p-4">
 						<div className="mb-2 flex items-center">
@@ -130,12 +126,6 @@ function MyPostsPage() {
 							>
 								{issue.title}
 							</Link>
-						</div>
-						<div>
-							<article
-								className="prose text-sm"
-								dangerouslySetInnerHTML={{ __html: issue.contentHtml ?? '...' }}
-							/>
 						</div>
 					</div>
 				))}
