@@ -73,29 +73,26 @@ function MyPostsPage() {
 		if (consecutiveFetch) setConsecutiveFetch(false);
 
 		const fetchData = async () => {
-			const issueData = await fetchIssueData(session as CustomSession, page);
+			const issueData = await fetchIssueData(page);
 			if (issueData.length < 5) {
 				setHasMore(false);
 			}
 			setIssues((prev) => [...prev, ...issueData]);
 			setPage(page + 1);
 		};
-		if (session && isBottom && hasMore) {
+		if (isBottom && hasMore) {
 			fetchData().then(() => {
 				setConsecutiveFetch(true);
 				setScroll({ x: 0, y: 0 });
 			});
 		}
-	}, [isBottom, session, page, hasMore, consecutiveFetch]);
+	}, [isBottom, page, hasMore, consecutiveFetch]);
 
 	useEffect(() => {
 		const fetchData = async () => {
-			if (session) {
-				const repoData = await fetchUserRepoList(session as CustomSession);
-				setRepos(repoData);
-			}
+			const repoData = await fetchUserRepoList();
+			setRepos(repoData);
 		};
-
 		fetchData();
 	}, [session]);
 
@@ -123,11 +120,10 @@ function MyPostsPage() {
 								</div>
 							</div>
 							<p className="ml-8 text-xl font-bold">{issue.title}</p>{' '}
-							{/* Increased font size */}
 						</div>
 
 						<Link
-							href={`/my-posts/detail?issueId=${issue.number}&repoName=${issue.repoName}&repoOwner=${issue.repoOwner}`}
+							href={`/post/detail?issueId=${issue.number}&repoName=${issue.repoName}&repoOwner=${issue.repoOwner}`}
 							className="rounded bg-[#412517] px-4 py-2 text-sm text-[#F9F1E0]"
 						>
 							View More
@@ -137,12 +133,14 @@ function MyPostsPage() {
 
 				{hasMore && <div>Loading more...</div>}
 			</div>
-			<button
-				className="fixed bottom-4 right-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-				onClick={() => setShowModal(true)}
-			>
-				Create New Issue
-			</button>
+			{session && (session as CustomSession).username == process.env.User_Name && (
+				<button
+					className="fixed bottom-4 right-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+					onClick={() => setShowModal(true)}
+				>
+					Create New Issue
+				</button>
+			)}
 
 			{showModal && (
 				<div

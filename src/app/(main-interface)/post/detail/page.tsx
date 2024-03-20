@@ -56,11 +56,10 @@ function IssueDetailsPage() {
 
 	useEffect(() => {
 		const fetchAndProcessIssueDetails = async () => {
-			if (!session || !issueId) return;
+			if (!issueId) return;
 
 			try {
 				const details = await fetchIssueDetails(
-					session as CustomSession,
 					repoName ?? '',
 					repoOwner ?? '',
 					parseInt(issueId, 10),
@@ -88,7 +87,7 @@ function IssueDetailsPage() {
 		};
 
 		fetchAndProcessIssueDetails();
-	}, [session, issueId, repoName, repoOwner]);
+	}, [issueId, repoName, repoOwner]);
 
 	const reactionEmojis: { [key: string]: string } = {
 		'+1': '👍',
@@ -103,7 +102,7 @@ function IssueDetailsPage() {
 
 	if (!issueDetails) return <div>Loading...</div>;
 	return (
-		<div className="p-4">
+		<div className="p-32">
 			{isEditing ? (
 				<div className="flex flex-col gap-4">
 					<div className="mt-4">
@@ -166,6 +165,7 @@ function IssueDetailsPage() {
 						<p>Author: {issueDetails.userName}</p>
 					</div>
 					<article className="prose" dangerouslySetInnerHTML={{ __html: issuesHtml }} />
+
 					{isAuthor && <button onClick={handleEditClick}>Edit</button>}
 				</>
 			)}

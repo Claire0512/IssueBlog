@@ -42,15 +42,10 @@ async function fetchIssueComments(
 }
 
 export const fetchIssueDetails = async (
-	session: CustomSession | null,
 	repoName: string,
 	repoOwner: string,
 	issueNumber: number,
 ): Promise<IssueDetailsData> => {
-	if (!session?.user?.name || !session?.user?.image) {
-		throw new Error('Session or user information is missing');
-	}
-
 	try {
 		const issueResponse = await axios.get(
 			`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${issueNumber}`,

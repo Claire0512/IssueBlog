@@ -1,9 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-// Importing Image component for optimized images
-import SignInButton from '@/src/components/SignInButton';
-
 function HomePage() {
 	return (
 		<>

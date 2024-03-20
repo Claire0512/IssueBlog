@@ -16,7 +16,7 @@ export const options = {
 			session.accessToken = token.accessToken;
 			return session;
 		},
-		async jwt({ token, user, account, profile, isNewUser }: any) {
+		async jwt({ token, account, profile }: any) {
 			if (profile) {
 				token.username = profile.login;
 			}
