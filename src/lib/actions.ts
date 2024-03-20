@@ -11,6 +11,44 @@ import type {
 	GitHubIssueApiResponse,
 } from './type';
 
+// export const fetchIssueData = async (
+// 	session: CustomSession | null,
+// 	page: number,
+// 	perPage = 5,
+// ): Promise<IssueData[]> => {
+// 	if (!session?.user?.name || !session?.user?.image) {
+// 		return [];
+// 	}
+// 	const userId = session.user.image?.split('/').pop()?.split('?')[0];
+// 	const userInfoResponse = await axios.get(`https://api.github.com/user/${userId}`);
+// 	const username = userInfoResponse.data.login;
+// 	let issuesData: IssueData[] = [];
+// 	try {
+// 		const issuesResponse = await axios.get(
+// 			`https://api.github.com/search/issues?q=author:${username}+is:issue+user:${username}&sort=created&order=desc&page=${page}&per_page=${perPage}`,
+// 			{
+// 				headers: {
+// 					Authorization: `token ${process.env.GITHUB_PAT}`,
+// 				},
+// 			},
+// 		);
+// 		issuesData = issuesResponse.data.items.map((issue: GitHubIssueApiResponse) => ({
+// 			number: issue.number,
+// 			htmlUrl: issue.html_url,
+// 			title: issue.title,
+// 			userName: issue.user.login,
+// 			avatarUrl: issue.user.avatar_url,
+// 			content: issue.body,
+// 			repoOwner: issue.repository_url.split('/')[4],
+// 			repoName: issue.repository_url.split('/')[5],
+// 			created_at: issue.created_at,
+// 		}));
+// 	} catch (error) {
+// 		console.error('Failed to fetch GitHub issues:', error);
+// 	}
+
+// 	return issuesData;
+// };
 export const fetchIssueData = async (
 	session: CustomSession | null,
 	page: number,
@@ -19,8 +57,30 @@ export const fetchIssueData = async (
 	if (!session?.user?.name || !session?.user?.image) {
 		return [];
 	}
-	const userId = session.user.image?.split('/').pop()?.split('?')[0];
-	const userInfoResponse = await axios.get(`https://api.github.com/user/${userId}`);
+
+	const userId = session.user.image.split('/').pop()?.split('?')[0];
+
+	// Check if GITHUB_PAT is available
+	if (!process.env.GITHUB_PAT) {
+		console.error('GitHub Personal Access Token is not set.');
+		return [];
+	}
+
+	let userInfoResponse;
+	try {
+		userInfoResponse = await axios.get(`https://api.github.com/user/${userId}`, {
+			headers: {
+				Authorization: `token ${process.env.GITHUB_PAT}`,
+			},
+		});
+	} catch (error: any) {
+		console.error(
+			'Failed to fetch GitHub user info:',
+			error.response ? error.response.data : error.message,
+		);
+		return [];
+	}
+
 	const username = userInfoResponse.data.login;
 	let issuesData: IssueData[] = [];
 	try {
@@ -43,13 +103,15 @@ export const fetchIssueData = async (
 			repoName: issue.repository_url.split('/')[5],
 			created_at: issue.created_at,
 		}));
-	} catch (error) {
-		console.error('Failed to fetch GitHub issues:', error);
+	} catch (error: any) {
+		console.error(
+			'Failed to fetch GitHub issues:',
+			error.response ? error.response.data : error.message,
+		);
 	}
 
 	return issuesData;
 };
-
 export const fetchGithubData = async (session: CustomSession | null): Promise<IssueStatistic> => {
 	const answer: IssueStatistic = {
 		issuesCount: 0,

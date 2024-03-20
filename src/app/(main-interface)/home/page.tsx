@@ -6,6 +6,6 @@ function HomePage() {
 			<Image src="/0.png" alt="Image" width={1000} height={600} />
 		</div>
 	);
-};
+}
 
 export default HomePage;

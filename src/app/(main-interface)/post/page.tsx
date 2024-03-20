@@ -42,7 +42,7 @@ function MyPostsPage() {
 	useScroll(refScroll, ({ scrollX, scrollY }) => setScroll({ x: scrollX, y: scrollY }));
 
 	const cantScroll = refScroll.current?.scrollHeight === refScroll.current?.clientHeight;
-	const isBottom = scroll.y > 0.9 || cantScroll;
+	const isBottom = (scroll.y > 0.9 || cantScroll) && !consecutiveFetch;
 
 	const createIssues = async () => {
 		const owner = selectedRepo.split('/')[0];
@@ -70,10 +70,8 @@ function MyPostsPage() {
 	}, [previewMode, issueContent]);
 
 	useEffect(() => {
-		if (consecutiveFetch) {
-			setConsecutiveFetch(false);
-			return;
-		}
+		if (consecutiveFetch) setConsecutiveFetch(false);
+
 		const fetchData = async () => {
 			const issueData = await fetchIssueData(session as CustomSession, page);
 			if (issueData.length < 5) {
@@ -83,8 +81,10 @@ function MyPostsPage() {
 			setPage(page + 1);
 		};
 		if (session && isBottom && hasMore) {
-			fetchData();
-			setConsecutiveFetch(true);
+			fetchData().then(() => {
+				setConsecutiveFetch(true);
+				setScroll({ x: 0, y: 0 });
+			});
 		}
 	}, [isBottom, session, page, hasMore, consecutiveFetch]);
 
@@ -100,7 +100,7 @@ function MyPostsPage() {
 	}, [session]);
 
 	return (
-		<div className="h-screen overflow-auto p-4" ref={refScroll}>
+		<div className="flex-1 overflow-auto p-4" ref={refScroll}>
 			<h1 className="mb-4 text-2xl font-bold">My GitHub Issues</h1>
 			<div className="mt-52 flex flex-col gap-4">
 				{issues.map((issue, index) => (
