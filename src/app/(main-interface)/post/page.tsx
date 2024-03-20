@@ -100,32 +100,41 @@ function MyPostsPage() {
 	}, [session]);
 
 	return (
-		<div className="flex-1 overflow-auto p-4" ref={refScroll}>
+		<div className="flex-1 overflow-auto p-32" ref={refScroll}>
 			<h1 className="mb-4 text-2xl font-bold">My GitHub Issues</h1>
-			<div className="mt-52 flex flex-col gap-4">
+			<div className="mt-4 flex flex-col gap-4 p-16">
 				{issues.map((issue, index) => (
-					<div key={index} className="rounded-lg border p-4">
-						<div className="mb-2 flex items-center">
+					<div
+						key={index}
+						className="mb-4 flex items-center justify-between rounded-[15px] border bg-white p-8"
+					>
+						<div className="flex items-center">
 							<Image
 								src={issue.avatarUrl}
-								width={40}
-								height={40}
+								width={60}
+								height={60}
 								alt={`Profile Pic for ${issue.userName}`}
 								className="rounded-full"
 							/>
-							<span className="ml-2">{issue.userName}</span>
-							<span className="ml-auto">{getTimeDifference(issue.created_at)}</span>
+							<div className="ml-4">
+								<div className="text-base font-medium">{issue.userName}</div>
+								<div className="text-sm text-gray-500">
+									{getTimeDifference(issue.created_at)}
+								</div>
+							</div>
+							<p className="ml-8 text-xl font-bold">{issue.title}</p>{' '}
+							{/* Increased font size */}
 						</div>
-						<div className="mb-2">
-							<Link
-								href={`/my-posts/detail?issueId=${issue.number}&repoName=${issue.repoName}&repoOwner=${issue.repoOwner}`}
-								className="text-xl font-bold"
-							>
-								{issue.title}
-							</Link>
-						</div>
+
+						<Link
+							href={`/my-posts/detail?issueId=${issue.number}&repoName=${issue.repoName}&repoOwner=${issue.repoOwner}`}
+							className="rounded bg-[#412517] px-4 py-2 text-sm text-[#F9F1E0]"
+						>
+							View More
+						</Link>
 					</div>
 				))}
+
 				{hasMore && <div>Loading more...</div>}
 			</div>
 			<button
