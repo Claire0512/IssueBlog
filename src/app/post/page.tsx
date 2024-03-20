@@ -36,6 +36,7 @@ function MyPostsPage() {
 	const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(true);
 	const [scroll, setScroll] = useState({ x: NaN, y: NaN });
+	const [consecutiveFetch, setConsecutiveFetch] = useState(false);
 
 	const refScroll = useRef<HTMLDivElement>(null);
 	useScroll(refScroll, ({ scrollX, scrollY }) => setScroll({ x: scrollX, y: scrollY }));
@@ -69,27 +70,23 @@ function MyPostsPage() {
 	}, [previewMode, issueContent]);
 
 	useEffect(() => {
-		const fetchData = async () => {
-			console.log(issues.length, page, hasMore, isBottom, cantScroll);
-			if (session && hasMore) {
-				if (issues.length < (page - 1) * 5) {
-					// console.log(issues.length, page, hasMore, isBottom, cantScroll);
-					console.log('Not yet loaded');
-					return;
-				}
-				const issueData = await fetchIssueData(session as CustomSession, page);
-				if (issueData.length < 5) {
-					setHasMore(false);
-				}
-				setIssues(issueData);
-				setPage(page + 1);
-			}
-		};
-		if (isBottom || cantScroll) {
-			console.log('Fetching data...');
-			fetchData();
+		if (consecutiveFetch) {
+			setConsecutiveFetch(false);
+			return;
 		}
-	}, [isBottom, session, cantScroll, page]);
+		const fetchData = async () => {
+			const issueData = await fetchIssueData(session as CustomSession, page);
+			if (issueData.length < 5) {
+				setHasMore(false);
+			}
+			setIssues((prev) => [...prev, ...issueData]);
+			setPage(page + 1);
+		};
+		if (session && isBottom && hasMore) {
+			fetchData();
+			setConsecutiveFetch(true);
+		}
+	}, [isBottom, session, page, hasMore, consecutiveFetch]);
 
 	useEffect(() => {
 		const fetchData = async () => {

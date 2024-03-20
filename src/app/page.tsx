@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import SignInButton from '@/src/components/SignInButton';
+
 function HomePage() {
 	return (
 		<div className="flex min-h-screen items-center justify-center border-[80px] border-[#FAC13E] bg-[#F9F1E0] p-4">
@@ -13,6 +15,7 @@ function HomePage() {
 				>
 					View
 				</Link>
+				<SignInButton />
 			</div>
 		</div>
 	);

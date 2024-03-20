@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
+import type{ ReactNode } from 'react';
 
 import Navbar from '@/src/components/Navbar';
 
-const Layout = ({ children }: { children: ReactNode }) => {
+function Layout({ children }: { children: ReactNode }) {
 	return (
 		<div className="min-h-screen bg-[#F9F1E0]">
 			<Navbar />
