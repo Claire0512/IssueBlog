@@ -29,7 +29,7 @@ function MyPostsPage() {
 	const [issueTitle, setIssueTitle] = useState('');
 	const [issueContent, setIssueContent] = useState('');
 	const [previewMode, setPreviewMode] = useState(false);
-
+	const [sortOption, setSortOption] = useState('created');
 	const togglePreviewMode = () => setPreviewMode(!previewMode);
 
 	const [repos, setRepos] = useState<RepoData[]>([]);
@@ -73,7 +73,7 @@ function MyPostsPage() {
 		if (consecutiveFetch) setConsecutiveFetch(false);
 
 		const fetchData = async () => {
-			const issueData = await fetchIssueData(page);
+			const issueData = await fetchIssueData(page, 5, sortOption);
 			if (issueData.length < 5) {
 				setHasMore(false);
 			}
@@ -86,7 +86,7 @@ function MyPostsPage() {
 				setScroll({ x: 0, y: 0 });
 			});
 		}
-	}, [isBottom, page, hasMore, consecutiveFetch]);
+	}, [isBottom, page, hasMore, consecutiveFetch, sortOption]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -98,7 +98,28 @@ function MyPostsPage() {
 
 	return (
 		<div className="flex-1 overflow-auto p-32" ref={refScroll}>
-			<h1 className="mb-4 text-2xl font-bold">My GitHub Issues</h1>
+			<div className="flex-start flex w-[20%] items-center space-x-8">
+				{' '}
+				{/* This div will ensure inline display */}
+				<h1 className="whitespace-nowrap text-4xl font-bold text-[#412517]">Sort by:</h1>
+				<Select onValueChange={setSortOption} value={sortOption}>
+					<SelectTrigger
+						aria-label="Sort"
+						className="text-md inline-flex items-center justify-center rounded-md border border-transparent bg-[#412517] py-6 font-medium text-white shadow-sm hover:bg-[#5a2d0c] focus:outline-none focus:ring-2 focus:ring-[#412517] focus:ring-offset-2"
+					>
+						{' '}
+						{/* Added classes to resemble a button */}
+						<SelectValue placeholder="Sort by" />
+					</SelectTrigger>
+					<SelectContent className="text-md mt-1 rounded-md bg-white shadow-lg">
+						<SelectItem value="created">Created</SelectItem>
+						<SelectItem value="updated">Updated</SelectItem>
+						<SelectItem value="comments">Comments</SelectItem>
+						<SelectItem value="reactions">Reactions</SelectItem>{' '}
+						{/* Fixed duplicate value */}
+					</SelectContent>
+				</Select>
+			</div>
 			<div className="mt-4 flex flex-col gap-4 p-16">
 				{issues.map((issue, index) => (
 					<div

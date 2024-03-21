@@ -10,7 +10,11 @@ import type {
 	GitHubIssueApiResponse,
 } from './type';
 
-export const fetchIssueData = async (page: number, perPage = 5): Promise<IssueData[]> => {
+export const fetchIssueData = async (
+	page: number,
+	perPage = 5,
+	sort = 'created',
+): Promise<IssueData[]> => {
 	if (!process.env.GITHUB_PAT) {
 		console.error('GitHub Personal Access Token is not set.');
 		return [];
@@ -19,7 +23,7 @@ export const fetchIssueData = async (page: number, perPage = 5): Promise<IssueDa
 	let issuesData: IssueData[] = [];
 	try {
 		const issuesResponse = await axios.get(
-			`https://api.github.com/search/issues?q=author:${process.env.User_Name}+is:issue+user:${process.env.User_Name}&sort=created&order=desc&page=${page}&per_page=${perPage}`,
+			`https://api.github.com/search/issues?q=author:${process.env.User_Name}+is:issue+user:${process.env.User_Name}&sort=${sort}&order=desc&page=${page}&per_page=${perPage}`,
 			{
 				headers: {
 					Authorization: `token ${process.env.GITHUB_PAT}`,
