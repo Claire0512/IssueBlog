@@ -1,6 +1,6 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 
@@ -26,12 +26,21 @@ function Navbar() {
 					Post
 				</Link>
 				{session ? (
-					<Link
-						href="/profile"
-						className={`text-[28px] font-semibold text-[#412517] ${buttonVariants({ variant: 'ghost' })}`}
-					>
-						Profile
-					</Link>
+					<>
+						<Link
+							href="/profile"
+							className={`text-[28px] font-semibold text-[#412517] ${buttonVariants({ variant: 'ghost' })}`}
+						>
+							Profile
+						</Link>
+						<Button
+							variant="ghost"
+							className="text-[28px] font-semibold text-[#412517] "
+							onClick={() => signOut({ callbackUrl: '/' })}
+						>
+							Logout
+						</Button>
+					</>
 				) : (
 					<Button
 						variant="ghost"
