@@ -3,7 +3,10 @@
 import { useEffect, useState } from 'react';
 
 import { useSession } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
+
+import { ChevronLeftIcon } from '@radix-ui/react-icons';
 
 import IssueComment from '@/src/components/IssueComment';
 import IssueDetailCard from '@/src/components/IssueDetailCard';
@@ -35,6 +38,7 @@ function IssueDetailsPage() {
 	const isAuthor = session?.user?.name === issueDetails?.userName;
 	const handleEditClick = () => setIsEditing(true);
 	const [previewMode, setPreviewMode] = useState(false);
+	const router = useRouter();
 	const handlePreviewClick = async () => {
 		if (!previewMode) {
 			const html = await markdownToHtml(editedContent);
@@ -60,6 +64,7 @@ function IssueDetailsPage() {
 				body: editedContent,
 			});
 			setIsEditing(false);
+			router.refresh();
 		}
 	};
 
@@ -101,6 +106,11 @@ function IssueDetailsPage() {
 	if (!issueDetails) return <div>Loading...</div>;
 	return (
 		<div className="flex w-full flex-col items-center justify-center p-32">
+			<div className="absolute left-0 top-24 ml-4 mt-4 p-8">
+				<Link href="/post">
+					<ChevronLeftIcon className="h-10 w-10" />
+				</Link>
+			</div>
 			<h1 className="mb-8 mt-8 w-1/2 text-center text-4xl font-bold">{issueDetails.title}</h1>
 			<IssueDetailCard
 				issueDetails={issueDetails}

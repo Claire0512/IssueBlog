@@ -1,5 +1,5 @@
-import { Account, Session, User, Profile } from 'next-auth';
-import { JWT } from 'next-auth/jwt';
+import type { Account, Session, User, Profile } from 'next-auth';
+import type { JWT } from 'next-auth/jwt';
 import GitHubProvider from 'next-auth/providers/github';
 
 export const options = {

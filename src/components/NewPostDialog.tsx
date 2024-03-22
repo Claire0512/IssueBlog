@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/src/components/ui/button';
 import {
@@ -37,7 +38,7 @@ function NewPostDialog({ repos }: { repos: RepoData[] }) {
 	const [htmlContent, setHtmlContent] = useState('');
 	const togglePreviewMode = () => setPreviewMode(!previewMode);
 	const [repoError, setRepoError] = useState('');
-
+	const router = useRouter();
 	const createIssues = async () => {
 		setTitleError('');
 		setContentError('');
@@ -72,6 +73,7 @@ function NewPostDialog({ repos }: { repos: RepoData[] }) {
 			setPreviewMode(false);
 			setHtmlContent('');
 			setOpen(false);
+			router.refresh();
 		} catch (error) {
 			console.error('Error creating issue:', error);
 		}
