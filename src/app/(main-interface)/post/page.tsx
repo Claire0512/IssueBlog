@@ -19,48 +19,33 @@ import {
 } from '@/src/components/ui/select';
 import { fetchIssueData, fetchUserRepoList } from '@/src/lib/actions';
 import getTimeDifference from '@/src/lib/getTimeDifference';
-import markdownToHtml from '@/src/lib/markdownToHtml';
-import type { CustomSession, RepoData, IssueData } from '@/src/lib/type';
+import type { RepoData, IssueData } from '@/src/lib/type';
 
 function MyPostsPage() {
 	const { data: session } = useSession();
 	const [issues, setIssues] = useState<IssueData[]>([]);
-	const [showModal, setShowModal] = useState(false);
-	const [selectedRepo, setSelectedRepo] = useState('');
-	const [issueTitle, setIssueTitle] = useState('');
-	const [issueContent, setIssueContent] = useState('');
-	const [previewMode, setPreviewMode] = useState(false);
 	const [sortOption, setSortOption] = useState('created');
-	const togglePreviewMode = () => setPreviewMode(!previewMode);
 
 	const [repos, setRepos] = useState<RepoData[]>([]);
 	const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(true);
 	const [scroll, setScroll] = useState({ x: NaN, y: NaN });
 	const [consecutiveFetch, setConsecutiveFetch] = useState(false);
-
 	const refScroll = useRef<HTMLDivElement>(null);
 	useScroll(refScroll, ({ scrollX, scrollY }) => setScroll({ x: scrollX, y: scrollY }));
 
 	const cantScroll = refScroll.current?.scrollHeight === refScroll.current?.clientHeight;
 	const isBottom = (scroll.y > 0.9 || cantScroll) && !consecutiveFetch;
 
-	const [htmlContent, setHtmlContent] = useState('');
-
-	useEffect(() => {
-		const processMarkdown = async () => {
-			if (previewMode && issueContent) {
-				const html = await markdownToHtml(issueContent);
-				setHtmlContent(html);
-			}
-		};
-
-		processMarkdown();
-	}, [previewMode, issueContent]);
+	const changeSortOption = (option: string) => {
+		setSortOption(option);
+		setPage(1);
+		setIssues([]);
+		setHasMore(true);
+	};
 
 	useEffect(() => {
 		if (consecutiveFetch) setConsecutiveFetch(false);
-
 		const fetchData = async () => {
 			const issueData = await fetchIssueData(page, 5, sortOption);
 			if (issueData.length < 5) {
@@ -84,16 +69,15 @@ function MyPostsPage() {
 		};
 		fetchData();
 	}, [session]);
-	if (session)
-		console.log((session as CustomSession).username, process.env.NEXT_PUBLIC_USER_NAME);
+
 	return (
-		<div className="flex-1 overflow-auto p-32" ref={refScroll}>
+		<div className="flex h-screen w-full flex-col overflow-auto p-32 pb-0">
 			<div className="flex-start flex w-[20%] items-center space-x-8">
 				<h1 className="whitespace-nowrap text-4xl font-bold text-[#412517]">Sort by:</h1>
-				<Select onValueChange={setSortOption} value={sortOption}>
+				<Select onValueChange={changeSortOption} value={sortOption}>
 					<SelectTrigger
 						aria-label="Sort"
-						className="text-md inline-flex items-center justify-center rounded-md border border-transparent bg-[#412517] py-6 font-medium text-white shadow-sm hover:bg-[#5a2d0c] focus:outline-none focus:ring-2 focus:ring-[#412517] focus:ring-offset-2"
+						className=" inline-flex items-center  justify-center rounded-xl border border-transparent bg-[#412517] py-6 text-xl font-medium text-white shadow-sm hover:bg-[#5a2d0c] focus:outline-none focus:ring-2 focus:ring-[#412517] focus:ring-offset-2"
 					>
 						<SelectValue placeholder="Sort by" />
 					</SelectTrigger>
@@ -105,22 +89,22 @@ function MyPostsPage() {
 					</SelectContent>
 				</Select>
 			</div>
-			<div className="mt-4 flex flex-col gap-4 p-16">
+			<div className="m-8 mb-0 flex flex-1 flex-col gap-4 overflow-auto" ref={refScroll}>
 				{issues.map((issue, index) => (
 					<div
 						key={index}
-						className="mb-4 flex items-center justify-between rounded-[15px] border bg-white p-8"
+						className="mb-2 flex items-center justify-between rounded-[15px] border bg-white p-8"
 					>
 						<div className="flex items-center">
 							<Image
 								src={issue.avatarUrl}
-								width={60}
-								height={60}
+								width={70}
+								height={70}
 								alt={`Profile Pic for ${issue.userName}`}
 								className="rounded-full"
 							/>
 							<div className="ml-4">
-								<div className="text-base font-medium">{issue.userName}</div>
+								<div className="text-md font-medium">{issue.userName}</div>
 								<div className="text-sm text-gray-500">
 									{getTimeDifference(issue.created_at)}
 								</div>
@@ -130,7 +114,7 @@ function MyPostsPage() {
 
 						<Link
 							href={`/post/detail?issueId=${issue.number}&repoName=${issue.repoName}&repoOwner=${issue.repoOwner}`}
-							className="rounded bg-[#412517] px-4 py-2 text-sm text-[#F9F1E0]"
+							className="px-4  py-2 text-xl font-bold text-[#412517]"
 						>
 							View More
 						</Link>
@@ -139,10 +123,9 @@ function MyPostsPage() {
 
 				{hasMore && <div>Loading more...</div>}
 			</div>
-			{session &&
-				(session as CustomSession).username === process.env.NEXT_PUBLIC_USER_NAME && (
-					<NewPostDialog repos={repos} />
-				)}
+			{session && session.username === process.env.NEXT_PUBLIC_USER_NAME && (
+				<NewPostDialog repos={repos} />
+			)}
 		</div>
 	);
 }

@@ -10,7 +10,7 @@ import { Button } from '@/src/components/ui/button';
 function Navbar() {
 	const { data: session } = useSession();
 	return (
-		<nav className="flex h-[100px] items-center justify-between bg-[#FAC13E] px-6">
+		<nav className="fixed flex h-[100px] w-full items-center justify-between bg-[#FAC13E] px-6">
 			<h1 className="px-16 text-[36px] font-bold text-[#412517]">DINU's Blog</h1>
 			<div>
 				<Link

@@ -51,14 +51,12 @@ export type IssueStatistic = {
 	reactionsCount: number;
 };
 
-export type CustomSession = Session & { username: string; accessToken: string };
-
 export type CreateIssueParams = {
 	repoOwner: string;
 	repoName: string;
 	title: string;
 	body: string;
-	session: CustomSession | null;
+	session: Session | null;
 };
 
 export type RepoData = {
@@ -87,7 +85,7 @@ export interface CommentData {
 	reactions: ReactionData;
 }
 
-export interface IssueDetailsData {
+export type IssueDetailsData = {
 	number: number;
 	htmlUrl: string;
 	repoOwner: string;
@@ -98,7 +96,8 @@ export interface IssueDetailsData {
 	content: string;
 	comments: CommentData[];
 	reactions: ReactionData[];
-}
+	createdAt: string;
+};
 
 export type UpdateIssueParams = {
 	repoOwner: string;
@@ -106,5 +105,37 @@ export type UpdateIssueParams = {
 	issueNumber: number;
 	title: string;
 	body: string;
-	session: CustomSession | null;
+	session: Session | null;
+};
+
+export type IssueDetailsEditProps = {
+	isEditing: boolean;
+	previewMode: boolean;
+	editedTitle: string;
+	setEditedTitle: (title: string) => void;
+	editedContent: string;
+	setEditedContent: (content: string) => void;
+	issuesHtml: string;
+	handleSaveClick: () => Promise<void>;
+	handleCancelClick: () => void;
+	handlePreviewClick: () => void;
+	reactionEmojis: { [key: string]: string };
+	issueDetails: IssueDetailsData;
+};
+
+export type IssueDisplayEditProps = {
+	issueDetails: IssueDetailsData;
+	isAuthor: boolean;
+	isEditing: boolean;
+	previewMode: boolean;
+	editedTitle: string;
+	setEditedTitle: (title: string) => void;
+	editedContent: string;
+	setEditedContent: (content: string) => void;
+	issuesHtml: string;
+	handleEditClick: () => void;
+	handleSaveClick: () => Promise<void>;
+	handleCancelClick: () => void;
+	handlePreviewClick: () => void;
+	reactionEmojis: { [key: string]: string };
 };

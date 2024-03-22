@@ -1,3 +1,5 @@
+import { Account, Session, User, Profile } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 import GitHubProvider from 'next-auth/providers/github';
 
 export const options = {
@@ -11,12 +13,27 @@ export const options = {
 		}),
 	],
 	callbacks: {
-		async session({ session, user, token }: any) {
+		async session({
+			session,
+			token,
+		}: {
+			session: Session;
+			token: JWT;
+			user: User;
+		}): Promise<Session> {
 			session.username = token.username;
 			session.accessToken = token.accessToken;
 			return session;
 		},
-		async jwt({ token, account, profile }: any) {
+		async jwt({
+			token,
+			account,
+			profile,
+		}: {
+			token: JWT;
+			account: Account | null;
+			profile?: Profile | undefined;
+		}): Promise<JWT> {
 			if (profile) {
 				token.username = profile.login;
 			}
@@ -26,5 +43,5 @@ export const options = {
 			return token;
 		},
 	},
-	secret: process.env.NEXTAUTH_SECRET,
+	secret: process.env.NEXTAUTH_SECRET!,
 };

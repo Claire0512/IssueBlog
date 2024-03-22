@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 function HomePage() {
 	return (
-		<div className="mt-40 flex items-center justify-center">
+		<div className="mt-60 flex items-center justify-center">
 			<div className="flex w-full max-w-6xl">
 				<div className="flex w-1/2 justify-center">
 					<Image src="/3.png" alt="DINU the Dog" width={500} height={600} />

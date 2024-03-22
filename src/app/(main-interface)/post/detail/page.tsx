@@ -3,21 +3,30 @@
 import { useEffect, useState } from 'react';
 
 import { useSession } from 'next-auth/react';
-import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 
+import IssueComment from '@/src/components/IssueComment';
+import IssueDetailCard from '@/src/components/IssueDetailCard';
 import { fetchIssueDetails, updateIssue } from '@/src/lib/githubApi';
 import markdownToHtml from '@/src/lib/markdownToHtml';
-import type { IssueDetailsData, CustomSession } from '@/src/lib/type';
+import type { IssueDetailsData } from '@/src/lib/type';
 
+export const reactionEmojis: { [key: string]: string } = {
+	'+1': '👍',
+	'-1': '👎',
+	laugh: '😄',
+	hooray: '🎉',
+	confused: '😕',
+	heart: '❤️',
+	rocket: '🚀',
+	eyes: '👀',
+};
 function IssueDetailsPage() {
 	const { data: session } = useSession();
 	const searchParams = useSearchParams();
-
 	const issueId = searchParams.get('issueId');
 	const repoName = searchParams.get('repoName');
 	const repoOwner = searchParams.get('repoOwner');
-
 	const [issueDetails, setIssueDetails] = useState<IssueDetailsData | null>(null);
 	const [issuesHtml, setIssuesHtml] = useState('');
 	const [isEditing, setIsEditing] = useState(false);
@@ -43,7 +52,7 @@ function IssueDetailsPage() {
 	const handleSaveClick = async () => {
 		if (session && repoName && repoOwner && issueId) {
 			await updateIssue({
-				session: session as CustomSession,
+				session,
 				repoOwner,
 				repoName,
 				issueNumber: parseInt(issueId, 10),
@@ -89,132 +98,28 @@ function IssueDetailsPage() {
 		fetchAndProcessIssueDetails();
 	}, [issueId, repoName, repoOwner]);
 
-	const reactionEmojis: { [key: string]: string } = {
-		'+1': '👍',
-		'-1': '👎',
-		laugh: '😄',
-		hooray: '🎉',
-		confused: '😕',
-		heart: '❤️',
-		rocket: '🚀',
-		eyes: '👀',
-	};
-
 	if (!issueDetails) return <div>Loading...</div>;
 	return (
-		<div className="p-32">
-			{isEditing ? (
-				<div className="flex flex-col gap-4">
-					<div className="mt-4">
-						<label
-							htmlFor="issue-title"
-							className="block text-sm font-medium text-gray-700"
-						>
-							Title:
-						</label>
-						<input
-							id="issue-title"
-							value={editedTitle}
-							onChange={(e) => setEditedTitle(e.target.value)}
-							className="title-input"
-							placeholder="Enter title here"
-						/>
-					</div>
-					<div className="mt-4 flex flex-1 flex-col">
-						<label
-							htmlFor="issue-content"
-							className="block text-sm font-medium text-gray-700"
-						>
-							Content:
-						</label>
-						{previewMode ? (
-							<article
-								className="prose p-4"
-								dangerouslySetInnerHTML={{ __html: issuesHtml }}
-							/>
-						) : (
-							<textarea
-								id="issue-content"
-								value={editedContent}
-								onChange={(e) => setEditedContent(e.target.value)}
-								className="content-textarea"
-								placeholder="Enter markdown content here"
-							/>
-						)}
-					</div>
-
-					<button onClick={handleSaveClick} disabled={!editedTitle.trim()}>
-						Save
-					</button>
-					<button onClick={handleCancelClick}>Cancel</button>
-					<button onClick={handlePreviewClick}>
-						{previewMode ? 'Back to Edit' : 'Preview'}
-					</button>
-				</div>
-			) : (
-				<>
-					<h1 className="text-2xl font-bold">{issueDetails.title}</h1>
-					<div className="mt-4">
-						<Image
-							src={issueDetails.avatarUrl}
-							alt="Author's avatar"
-							width={50}
-							height={50}
-							className="rounded-full"
-						/>
-						<p>Author: {issueDetails.userName}</p>
-					</div>
-					<article className="prose" dangerouslySetInnerHTML={{ __html: issuesHtml }} />
-
-					{isAuthor && <button onClick={handleEditClick}>Edit</button>}
-				</>
-			)}
-
-			<div className="mt-4">
-				{Object.entries(issueDetails.reactions).map(([key, value]) => {
-					if (key in reactionEmojis && typeof value === 'number' && value > 0) {
-						return (
-							<span key={key} className="mr-2">
-								{reactionEmojis[key]} {value}
-							</span>
-						);
-					}
-					return null;
-				})}
-			</div>
-
-			<h2 className="mb-4 mt-8 text-xl font-bold">Comments</h2>
+		<div className="flex w-full flex-col items-center justify-center p-32">
+			<h1 className="mb-8 mt-8 w-1/2 text-center text-4xl font-bold">{issueDetails.title}</h1>
+			<IssueDetailCard
+				issueDetails={issueDetails}
+				isAuthor={isAuthor}
+				isEditing={isEditing}
+				previewMode={previewMode}
+				editedTitle={editedTitle}
+				setEditedTitle={setEditedTitle}
+				editedContent={editedContent}
+				setEditedContent={setEditedContent}
+				issuesHtml={issuesHtml}
+				handleEditClick={handleEditClick}
+				handleSaveClick={handleSaveClick}
+				handleCancelClick={handleCancelClick}
+				handlePreviewClick={handlePreviewClick}
+				reactionEmojis={reactionEmojis}
+			/>
 			{issueDetails.comments.map((comment) => (
-				<div key={comment.id} className="mb-4 rounded-lg border p-4">
-					<div className="flex items-center">
-						<Image
-							src={comment.user.avatarUrl}
-							alt="Commenter's avatar"
-							width={40}
-							height={40}
-							className="rounded-full"
-						/>
-						<span className="ml-2">{comment.user.login}</span>
-					</div>
-
-					<article
-						className="prose mt-2"
-						dangerouslySetInnerHTML={{ __html: comment.bodyHtml ?? '...' }}
-					/>
-
-					<div className="mt-2">
-						{Object.entries(comment.reactions).map(([key, value]) => {
-							if (key in reactionEmojis && typeof value === 'number' && value > 0) {
-								return (
-									<span key={key} className="mr-2">
-										{reactionEmojis[key]} {value}
-									</span>
-								);
-							}
-							return null;
-						})}
-					</div>
-				</div>
+				<IssueComment key={comment.id} comment={comment} />
 			))}
 		</div>
 	);

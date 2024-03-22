@@ -49,32 +49,32 @@ function ProfilePage() {
 				</div>
 				<div className="mt-8 flex w-full items-center justify-center gap-4">
 					<Card className="w-[14%]">
-						<CardContent className="rounded-xl bg-white">
+						<CardContent className="rounded-xl border-l-[16px] border-[#412517] bg-white">
 							<CardHeader className="text-center text-2xl text-[#412517]">
-								Post
+								發布的文章
 							</CardHeader>
-							<p className="text-bold text-center text-4xl">
-								{githubData.issuesCount}
+							<p className="text-bold text-center text-4xl text-[#412517]">
+								{githubData.issuesCount} 則
 							</p>
 						</CardContent>
 					</Card>
 					<Card className="w-[14%]">
-						<CardContent className="rounded-xl bg-white">
+						<CardContent className="rounded-xl border-l-[16px] border-[#412517] bg-white">
 							<CardHeader className="text-center text-2xl text-[#412517]">
-								Comments
+								文章被留言
 							</CardHeader>
 							<p className="text-bold text-center text-4xl">
-								{githubData.commentsCount}
+								{githubData.commentsCount} 次
 							</p>
 						</CardContent>
 					</Card>
 					<Card className="w-[14%]">
-						<CardContent className="rounded-xl bg-white">
+						<CardContent className="rounded-xl border-l-[16px] border-[#412517] bg-white">
 							<CardHeader className="text-center text-2xl text-[#412517]">
-								Reactions
+								獲得的表情
 							</CardHeader>
 							<p className="text-bold text-center text-4xl">
-								{githubData.reactionsCount}
+								{githubData.reactionsCount} 個
 							</p>
 						</CardContent>
 					</Card>

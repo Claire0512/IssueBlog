@@ -14,6 +14,7 @@ export const fetchIssueData = async (
 	page: number,
 	perPage = 5,
 	sort = 'created',
+	order = 'asc',
 ): Promise<IssueData[]> => {
 	if (!process.env.GITHUB_PAT) {
 		console.error('GitHub Personal Access Token is not set.');
@@ -23,7 +24,7 @@ export const fetchIssueData = async (
 	let issuesData: IssueData[] = [];
 	try {
 		const issuesResponse = await axios.get(
-			`https://api.github.com/search/issues?q=author:${process.env.NEXT_PUBLIC_USER_NAME}+is:issue+user:${process.env.NEXT_PUBLIC_USER_NAME}&sort=${sort}&order=desc&page=${page}&per_page=${perPage}`,
+			`https://api.github.com/search/issues?q=author:${process.env.NEXT_PUBLIC_USER_NAME}+is:issue+user:${process.env.NEXT_PUBLIC_USER_NAME}&sort=${sort}&order=${order}&page=${page}&per_page=${perPage}`,
 			{
 				headers: {
 					Authorization: `token ${process.env.GITHUB_PAT}`,
@@ -41,11 +42,8 @@ export const fetchIssueData = async (
 			repoName: issue.repository_url.split('/')[5],
 			created_at: issue.created_at,
 		}));
-	} catch (error: any) {
-		console.error(
-			'Failed to fetch GitHub issues:',
-			error.response ? error.response.data : error.message,
-		);
+	} catch (error) {
+		console.error('Failed to fetch GitHub issues:', error);
 	}
 
 	return issuesData;

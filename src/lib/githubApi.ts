@@ -4,7 +4,6 @@ import axios from 'axios';
 
 import { aggregateReactions } from './dataProcessing';
 import type {
-	CustomSession,
 	GitHubIssueApiResponse,
 	CommentAPIResponse,
 	ReactionData,
@@ -69,6 +68,7 @@ export const fetchIssueDetails = async (
 			reactions: reactions ?? [],
 			repoOwner: issue.repository_url.split('/')[4],
 			repoName: issue.repository_url.split('/')[5],
+			createdAt: issue.created_at,
 		};
 	} catch (error) {
 		console.error('Error fetching issue details:', error);
