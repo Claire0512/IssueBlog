@@ -54,7 +54,7 @@ function MyPostsPage() {
 			setIssues((prev) => [...prev, ...issueData]);
 			setPage(page + 1);
 		};
-		if (isBottom && hasMore) {
+		if (page === 1 || (isBottom && hasMore)) {
 			fetchData().then(() => {
 				setConsecutiveFetch(true);
 				setScroll({ x: 0, y: 0 });
