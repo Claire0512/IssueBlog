@@ -105,13 +105,13 @@ function IssueDetailsPage() {
 
 	if (!issueDetails) return <div>Loading...</div>;
 	return (
-		<div className="flex w-full flex-col items-center justify-center p-32">
-			<div className="absolute left-0 top-24 ml-4 mt-4 p-8">
+		<div className="flex w-full flex-col items-center justify-center p-24">
+			<div className="absolute left-0 top-24 ml-[15%] mt-4">
 				<Link href="/post">
 					<ChevronLeftIcon className="h-10 w-10" />
 				</Link>
 			</div>
-			<h1 className="mb-8 mt-8 w-1/2 text-center text-4xl font-bold">{issueDetails.title}</h1>
+			<h1 className="mb-8 mt-4 w-1/2 text-center text-3xl font-bold">{issueDetails.title}</h1>
 			<IssueDetailCard
 				issueDetails={issueDetails}
 				isAuthor={isAuthor}

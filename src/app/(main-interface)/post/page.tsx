@@ -71,13 +71,13 @@ function MyPostsPage() {
 	}, [session]);
 
 	return (
-		<div className="flex h-screen w-full flex-col overflow-auto p-32 pb-0">
+		<div className="flex h-screen w-full flex-col overflow-auto p-40 pb-0 pt-32">
 			<div className="flex-start flex w-[20%] items-center space-x-8">
-				<h1 className="whitespace-nowrap text-4xl font-bold text-[#412517]">Sort by:</h1>
+				<h1 className="whitespace-nowrap text-3xl font-bold text-[#412517]">Sort by:</h1>
 				<Select onValueChange={changeSortOption} value={sortOption}>
 					<SelectTrigger
 						aria-label="Sort"
-						className=" inline-flex items-center  justify-center rounded-xl border border-transparent bg-[#412517] py-6 text-xl font-medium text-white shadow-sm hover:bg-[#5a2d0c] focus:outline-none focus:ring-2 focus:ring-[#412517] focus:ring-offset-2"
+						className=" inline-flex items-center  justify-center rounded-md border border-transparent bg-[#412517] py-4 text-lg font-medium text-white shadow-sm hover:bg-[#5a2d0c] focus:outline-none focus:ring-2 focus:ring-[#412517] focus:ring-offset-2"
 					>
 						<SelectValue placeholder="Sort by" />
 					</SelectTrigger>
@@ -89,17 +89,17 @@ function MyPostsPage() {
 					</SelectContent>
 				</Select>
 			</div>
-			<div className="m-8 mb-0 flex flex-1 flex-col gap-4 overflow-auto" ref={refScroll}>
+			<div className="m-8 mb-0 flex flex-1 flex-col gap-3 overflow-auto" ref={refScroll}>
 				{issues.map((issue, index) => (
 					<div
 						key={index}
-						className="mb-2 flex items-center justify-between rounded-[15px] border bg-white p-8"
+						className="mb-1 flex items-center justify-between rounded-[15px] border bg-white p-6"
 					>
 						<div className="flex items-center">
 							<Image
 								src={issue.avatarUrl}
-								width={70}
-								height={70}
+								width={60}
+								height={60}
 								alt={`Profile Pic for ${issue.userName}`}
 								className="rounded-full"
 							/>
@@ -114,7 +114,7 @@ function MyPostsPage() {
 
 						<Link
 							href={`/post/detail?issueId=${issue.number}&repoName=${issue.repoName}&repoOwner=${issue.repoOwner}`}
-							className="px-4  py-2 text-xl font-bold text-[#412517]"
+							className="px-4  py-2 text-lg font-bold text-[#412517]"
 						>
 							View More
 						</Link>

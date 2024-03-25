@@ -36,7 +36,7 @@ function IssueDetailsEdit({
 				</label>
 				{previewMode ? (
 					<article
-						className="prose m-4"
+						className="prose m-4 max-w-none break-words"
 						dangerouslySetInnerHTML={{ __html: issuesHtml }}
 					/>
 				) : (
@@ -44,12 +44,12 @@ function IssueDetailsEdit({
 						id="issue-content"
 						value={editedContent}
 						onChange={(e) => setEditedContent(e.target.value)}
-						className="content-textarea"
+						className="content-textarea w-full break-words"
 						placeholder="Enter markdown content here"
 					/>
 				)}
 			</div>
-			<div className="flex justify-end gap-4 p-4">
+			<div className="flex justify-end gap-4">
 				<button onClick={handleSaveClick} disabled={!editedTitle.trim()}>
 					Save
 				</button>
@@ -61,7 +61,10 @@ function IssueDetailsEdit({
 		</>
 	) : (
 		<>
-			<article className="prose m-6" dangerouslySetInnerHTML={{ __html: issuesHtml }} />
+			<article
+				className="prose m-6 max-w-none break-words"
+				dangerouslySetInnerHTML={{ __html: issuesHtml }}
+			/>
 			<div className="flex p-4">
 				{Object.entries(issueDetails.reactions).map(
 					([key, value]) =>

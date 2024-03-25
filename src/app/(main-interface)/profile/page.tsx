@@ -28,13 +28,13 @@ function ProfilePage() {
 	return (
 		<div className="flex flex-1 justify-center pt-32">
 			<div className="w-full">
-				<div className="mt-8 text-center">
+				<div className="text-center">
 					{session?.user?.image && (
 						<div className="flex justify-center">
 							<Image
 								src={session.user.image}
-								width={180}
-								height={180}
+								width={100}
+								height={100}
 								alt={`Profile Pic for ${session.user.name}`}
 								priority={true}
 								className="mt-8 rounded-full"
@@ -42,38 +42,38 @@ function ProfilePage() {
 						</div>
 					)}
 					{session?.user?.name && (
-						<h2 className="mt-8 text-center text-4xl text-[#412517]">
+						<h2 className="mt-8 text-center text-3xl text-[#412517]">
 							{session.user.name}
 						</h2>
 					)}
 				</div>
 				<div className="mt-8 flex w-full items-center justify-center gap-4">
-					<Card className="w-[14%]">
+					<Card className="w-[18%]">
 						<CardContent className="rounded-xl border-l-[16px] border-[#412517] bg-white">
-							<CardHeader className="text-center text-2xl text-[#412517]">
+							<CardHeader className="text-center text-xl text-[#412517]">
 								發布的文章
 							</CardHeader>
-							<p className="text-bold text-center text-4xl text-[#412517]">
+							<p className="text-bold text-center text-3xl text-[#412517]">
 								{githubData.issuesCount} 則
 							</p>
 						</CardContent>
 					</Card>
-					<Card className="w-[14%]">
+					<Card className="w-[18%]">
 						<CardContent className="rounded-xl border-l-[16px] border-[#412517] bg-white">
-							<CardHeader className="text-center text-2xl text-[#412517]">
+							<CardHeader className="text-center text-xl text-[#412517]">
 								文章被留言
 							</CardHeader>
-							<p className="text-bold text-center text-4xl">
+							<p className="text-bold text-center text-3xl">
 								{githubData.commentsCount} 次
 							</p>
 						</CardContent>
 					</Card>
-					<Card className="w-[14%]">
+					<Card className="w-[18%]">
 						<CardContent className="rounded-xl border-l-[16px] border-[#412517] bg-white">
-							<CardHeader className="text-center text-2xl text-[#412517]">
+							<CardHeader className="text-center text-xl text-[#412517]">
 								獲得的表情
 							</CardHeader>
-							<p className="text-bold text-center text-4xl">
+							<p className="text-bold text-center text-3xl">
 								{githubData.reactionsCount} 個
 							</p>
 						</CardContent>

@@ -14,7 +14,7 @@ export const fetchIssueData = async (
 	page: number,
 	perPage = 5,
 	sort = 'created',
-	order = 'asc',
+	order = 'desc',
 ): Promise<IssueData[]> => {
 	if (!process.env.GITHUB_PAT) {
 		console.error('GitHub Personal Access Token is not set.');

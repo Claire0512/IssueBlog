@@ -97,7 +97,7 @@ function NewPostDialog({ repos }: { repos: RepoData[] }) {
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="fixed flex min-h-[80%] flex-col  overflow-y-auto bg-white">
-				<DialogHeader className="mx-auto h-full w-[60%] rounded-md p-5 text-center text-3xl  font-bold text-[#412517]">
+				<DialogHeader className="mx-auto h-full w-[60%] rounded-md p-4 text-center text-2xl  font-bold text-[#412517]">
 					New Post
 				</DialogHeader>
 				<Label htmlFor="repo-select">Repo:</Label>
