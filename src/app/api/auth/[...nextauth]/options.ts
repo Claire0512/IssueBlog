@@ -8,7 +8,7 @@ export const options = {
 			clientId: process.env.GITHUB_ID || '',
 			clientSecret: process.env.GITHUB_SECRET || '',
 			authorization: {
-				params: { scope: 'read:user user:email repo' },
+				params: { scope: 'read:user user:email public_repo' },
 			},
 		}),
 	],

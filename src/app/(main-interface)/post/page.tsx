@@ -89,7 +89,10 @@ function MyPostsPage() {
 					</SelectContent>
 				</Select>
 			</div>
-			<div className="m-8 mb-0 flex flex-1 flex-col gap-3 overflow-auto" ref={refScroll}>
+			<div
+				className="mx-16 my-8 mb-0 flex flex-1 flex-col gap-3 overflow-auto"
+				ref={refScroll}
+			>
 				{issues.map((issue, index) => (
 					<div
 						key={index}

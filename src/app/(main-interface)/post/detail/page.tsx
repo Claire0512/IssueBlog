@@ -35,7 +35,7 @@ function IssueDetailsPage() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedTitle, setEditedTitle] = useState('');
 	const [editedContent, setEditedContent] = useState('');
-	const isAuthor = session?.user?.name === issueDetails?.userName;
+	const isAuthor = session?.username === issueDetails?.userName;
 	const handleEditClick = () => setIsEditing(true);
 	const [previewMode, setPreviewMode] = useState(false);
 	const router = useRouter();
@@ -67,7 +67,7 @@ function IssueDetailsPage() {
 			router.refresh();
 		}
 	};
-
+	console.log(session);
 	useEffect(() => {
 		const fetchAndProcessIssueDetails = async () => {
 			if (!issueId) return;
