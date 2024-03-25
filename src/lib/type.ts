@@ -32,6 +32,7 @@ export type GitHubReaction = {
 
 export type GitHubIssueApiResponse = {
 	number: number;
+	url: string;
 	repository_url: string;
 	html_url: string;
 	title: string;

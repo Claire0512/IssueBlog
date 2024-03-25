@@ -64,27 +64,41 @@ export const fetchGithubData = async (): Promise<IssueStatistic> => {
 				},
 			},
 		);
+
 		const issues = issuesResponse.data.items;
 		answer.issuesCount = issues.length;
-		let reactionsResponse;
-		for (const issue of issues) {
-			const commentsResponse = await axios.get(issue.comments_url, {
+
+		const commentsPromises = issues.map((issue: GitHubIssueApiResponse) => {
+			return axios.get(issue.comments_url as string, {
 				headers: {
 					Authorization: `token ${process.env.GITHUB_PAT}`,
 				},
 			});
+		});
+
+		const reactionsPromises = issues.map((issue: GitHubIssueApiResponse) => {
+			return axios.get(`${issue.url}/reactions`, {
+				headers: {
+					Authorization: `token ${process.env.GITHUB_PAT}`,
+				},
+			});
+		});
+
+		const commentsResponses = await Promise.all(commentsPromises);
+		const reactionsResponses = await Promise.all(reactionsPromises);
+
+		commentsResponses.forEach((commentsResponse) => {
 			answer.commentsCount += commentsResponse.data.length;
-			reactionsResponse = await axios.get(`${issue.url}/reactions`, {
-				headers: {
-					Authorization: `token ${process.env.GITHUB_PAT}`,
-				},
-			});
+		});
+
+		reactionsResponses.forEach((reactionsResponse) => {
 			answer.reactionsCount += reactionsResponse.data.length;
-		}
-	} catch (error) {
-		console.error('Failed to fetch GitHub data:', error);
+		});
 		return answer;
+	} catch (error) {
+		console.error('Error fetching issues:', error);
 	}
+
 	return answer;
 };
 
