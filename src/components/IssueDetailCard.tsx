@@ -22,7 +22,6 @@ function IssueDetailCard({
 	handleCancelClick,
 	handlePreviewClick,
 	handleDeleteClick,
-	reactionEmojis,
 }: IssueDetailCardProps) {
 	return (
 		<div className="flex w-[70%] pb-8">
@@ -53,6 +52,7 @@ function IssueDetailCard({
 						</button>
 					)}
 				</div>
+
 				<IssueContent
 					isEditing={isEditing}
 					previewMode={previewMode}
@@ -66,7 +66,6 @@ function IssueDetailCard({
 					handleCancelClick={handleCancelClick}
 					handlePreviewClick={handlePreviewClick}
 					handleDeleteClick={handleDeleteClick}
-					reactionEmojis={reactionEmojis}
 					issueDetails={issueDetails}
 				/>
 			</div>

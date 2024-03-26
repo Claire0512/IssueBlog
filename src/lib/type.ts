@@ -96,7 +96,7 @@ export type IssueDetailsData = {
 	avatarUrl: string;
 	content: string;
 	comments: CommentData[];
-	reactions: ReactionData[];
+	reactions: ReactionData;
 	createdAt: string;
 };
 
@@ -123,7 +123,6 @@ export type IssueContentProps = {
 	handleCancelClick: () => void;
 	handlePreviewClick: () => void;
 	handleDeleteClick: () => Promise<void>;
-	reactionEmojis: { [key: string]: string };
 	issueDetails: IssueDetailsData;
 };
 
@@ -143,5 +142,4 @@ export type IssueDetailCardProps = {
 	handleCancelClick: () => void;
 	handlePreviewClick: () => void;
 	handleDeleteClick: () => Promise<void>;
-	reactionEmojis: { [key: string]: string };
 };

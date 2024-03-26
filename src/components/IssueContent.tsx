@@ -2,6 +2,8 @@ import React from 'react';
 
 import type { IssueContentProps } from '../lib/type';
 
+import EmojiBar from './EmojiBar';
+
 function IssueContent({
 	isEditing,
 	previewMode,
@@ -15,7 +17,6 @@ function IssueContent({
 	handleDeleteClick,
 	handleCancelClick,
 	handlePreviewClick,
-	reactionEmojis,
 	issueDetails,
 }: IssueContentProps) {
 	return isEditing ? (
@@ -70,18 +71,7 @@ function IssueContent({
 				className="prose m-6 max-w-none break-words"
 				dangerouslySetInnerHTML={{ __html: issuesHtml }}
 			/>
-			<div className="flex p-4">
-				{Object.entries(issueDetails.reactions).map(
-					([key, value]) =>
-						key in reactionEmojis &&
-						typeof value === 'number' &&
-						value > 0 && (
-							<span key={key} className="mr-2">
-								{reactionEmojis[key]} {value}
-							</span>
-						),
-				)}
-			</div>
+			<EmojiBar reactions={issueDetails.reactions} />
 		</>
 	);
 }

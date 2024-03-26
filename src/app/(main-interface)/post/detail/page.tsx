@@ -14,16 +14,6 @@ import { fetchIssueDetails, updateIssue } from '@/src/lib/githubApi';
 import markdownToHtml from '@/src/lib/markdownToHtml';
 import type { IssueDetailsData } from '@/src/lib/type';
 
-export const reactionEmojis: { [key: string]: string } = {
-	'+1': '👍',
-	'-1': '👎',
-	laugh: '😄',
-	hooray: '🎉',
-	confused: '😕',
-	heart: '❤️',
-	rocket: '🚀',
-	eyes: '👀',
-};
 function IssueDetailsPage() {
 	const { data: session } = useSession();
 	const searchParams = useSearchParams();
@@ -144,7 +134,6 @@ function IssueDetailsPage() {
 				handleCancelClick={handleCancelClick}
 				handlePreviewClick={handlePreviewClick}
 				handleDeleteClick={handleDeleteClick}
-				reactionEmojis={reactionEmojis}
 			/>
 			{issueDetails.comments.map((comment) => (
 				<IssueComment key={comment.id} comment={comment} />

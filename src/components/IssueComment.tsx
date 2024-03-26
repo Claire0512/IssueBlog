@@ -2,9 +2,10 @@ import React from 'react';
 
 import Image from 'next/image';
 
-import { reactionEmojis } from '@/src/app/(main-interface)/post/detail/page';
 import getTimeDifference from '@/src/lib/getTimeDifference';
 import type { CommentData } from '@/src/lib/type';
+
+import EmojiBar from './EmojiBar';
 
 function IssueComment({ comment }: { comment: CommentData }) {
 	return (
@@ -31,19 +32,7 @@ function IssueComment({ comment }: { comment: CommentData }) {
 					className="prose m-6 max-w-none break-words"
 					dangerouslySetInnerHTML={{ __html: comment.bodyHtml ?? '...' }}
 				/>
-
-				<div className="flex p-4">
-					{Object.entries(comment.reactions).map(
-						([key, value]) =>
-							key in reactionEmojis &&
-							typeof value === 'number' &&
-							value > 0 && (
-								<span key={key} className="mr-2">
-									{reactionEmojis[key]} {value}
-								</span>
-							),
-					)}
-				</div>
+				<EmojiBar reactions={comment.reactions} />
 			</div>
 		</div>
 	);
