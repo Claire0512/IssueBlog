@@ -112,12 +112,9 @@ export type UpdateIssueParams = {
 };
 
 export type IssueEditProps = {
-	editedTitle: string;
-	setEditedTitle: (title: string) => void;
-	editedContent: string;
-	setEditedContent: (content: string) => void;
-	initialHtml: string;
-	handleSaveClick: () => Promise<void>;
+	title: string;
+	content: string;
+	handleSaveClick: (title: string, content: string) => Promise<void>;
 	handleCancelClick: () => void;
 	handleDeleteClick: () => Promise<void>;
 };

@@ -3,18 +3,17 @@ import type { IssueEditProps } from '../lib/type';
 import markdownToHtml from '@/src/lib/markdownToHtml';
 
 function IssueEdit({
-	editedTitle,
-	setEditedTitle,
-	editedContent,
-	setEditedContent,
-	initialHtml,
+	title,
+	content,
 	handleSaveClick,
 	handleDeleteClick,
 	handleCancelClick,
 }: IssueEditProps) {
 
+	const [editedTitle, setEditedTitle] = useState(title);
+	const [editedContent, setEditedContent] = useState(content);
 	const [previewMode, setPreviewMode] = useState(false);
-	const [issuesHtml, setIssuesHtml] = useState(initialHtml);
+	const [issuesHtml, setIssuesHtml] = useState('');
 
 	const handlePreviewClick = async () => {
 		if (!previewMode) {
@@ -58,7 +57,7 @@ function IssueEdit({
 				)}
 			</div>
 			<div className="flex justify-end gap-4">
-				<button onClick={handleSaveClick} disabled={!editedTitle.trim()}>
+				<button onClick={() => handleSaveClick(editedTitle, editedContent)} disabled={!editedTitle.trim()}>
 					Save
 				</button>
 				<button onClick={handleDeleteClick} disabled={!editedTitle.trim()}>

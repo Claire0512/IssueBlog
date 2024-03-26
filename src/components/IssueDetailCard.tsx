@@ -20,23 +20,19 @@ function IssueDetailCard({
 
 	const isAuthor = session?.username === issueDetails.userName;
 	const [isEditing, setIsEditing] = useState(false);
-	const [editedTitle, setEditedTitle] = useState(issueDetails.title);
-	const [editedContent, setEditedContent] = useState(issueDetails.content);
 
 	const handleCancelClick = () => {
 		setIsEditing(false);
-		setEditedTitle(issueDetails?.title || '');
-		setEditedContent(issueDetails?.content || '');
 	};
 
-	const handleSaveClick = async () => {
+	const handleSaveClick = async (title: string, content: string) => {
 		await updateIssue({
 			session,
 			repoOwner: issueDetails.repoOwner,
 			repoName: issueDetails.repoName,
 			issueNumber: issueDetails.number,
-			title: editedTitle,
-			body: editedContent,
+			title,
+			body: content,
 		});
 		setIsEditing(false);
 		router.refresh();
@@ -73,11 +69,8 @@ function IssueDetailCard({
 				/>
 				{ isEditing ?
 					<IssueEdit
-						editedTitle={editedTitle}
-						setEditedTitle={setEditedTitle}
-						editedContent={editedContent}
-						setEditedContent={setEditedContent}
-						initialHtml={issueDetails.bodyHtml}
+						title={issueDetails.title}
+						content={issueDetails.content}
 						handleSaveClick={handleSaveClick}
 						handleCancelClick={handleCancelClick}
 						handleDeleteClick={handleDeleteClick}
