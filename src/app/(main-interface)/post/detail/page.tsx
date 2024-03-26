@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
@@ -37,7 +38,7 @@ function IssueDetailsPage() {
 	}, [issueId, repoName, repoOwner]);
 
 	if (!issueDetails) return <div>Loading...</div>;
-	
+
 	return (
 		<div className="flex w-full flex-col items-center justify-center p-24">
 			<div className="absolute left-0 top-24 ml-[15%] mt-4">

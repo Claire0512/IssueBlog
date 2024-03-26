@@ -125,6 +125,6 @@ export type IssueDetailCardProps = {
 
 export type IssueUpdate = {
 	title?: string;
-	body?:string;
+	body?: string;
 	state?: string;
-}
+};

@@ -1,6 +1,16 @@
-import getTimeDifference from "@/src/lib/getTimeDifference";
+import getTimeDifference from '@/src/lib/getTimeDifference';
 
-export default function IssueHeader({ username, createdAt, canEdit=false, handleEditClick=()=>{} }: { username: string, createdAt: string, canEdit?: boolean, handleEditClick?: () => void }) {
+export default function IssueHeader({
+	username,
+	createdAt,
+	canEdit = false,
+	handleEditClick = () => {},
+}: {
+	username: string;
+	createdAt: string;
+	canEdit?: boolean;
+	handleEditClick?: () => void;
+}) {
 	return (
 		<div className="flex w-full flex-1 items-center justify-between rounded-t-lg bg-[#fac23e80] p-2">
 			<div className="item-center flex  ">
@@ -18,5 +28,5 @@ export default function IssueHeader({ username, createdAt, canEdit=false, handle
 				</button>
 			)}
 		</div>
-	)
+	);
 }

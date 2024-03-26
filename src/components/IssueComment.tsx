@@ -4,8 +4,8 @@ import Image from 'next/image';
 
 import type { CommentData } from '@/src/lib/type';
 
-import IssueView from './IssueView';
 import IssueHeader from './IssueHeader';
+import IssueView from './IssueView';
 
 function IssueComment({ comment }: { comment: CommentData }) {
 	return (

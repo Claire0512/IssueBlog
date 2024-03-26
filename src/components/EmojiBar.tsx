@@ -1,4 +1,4 @@
-import { ReactionData } from '../lib/type';
+import type { ReactionData } from '../lib/type';
 
 const reactionEmojis: { [key: string]: string } = {
 	'+1': '👍',

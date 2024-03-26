@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+
 import type { IssueEditProps } from '../lib/type';
+
 import markdownToHtml from '@/src/lib/markdownToHtml';
 
 function IssueEdit({
@@ -9,7 +11,6 @@ function IssueEdit({
 	handleDeleteClick,
 	handleCancelClick,
 }: IssueEditProps) {
-
 	const [editedTitle, setEditedTitle] = useState(title);
 	const [editedContent, setEditedContent] = useState(content);
 	const [previewMode, setPreviewMode] = useState(false);
@@ -57,7 +58,10 @@ function IssueEdit({
 				)}
 			</div>
 			<div className="flex justify-end gap-4">
-				<button onClick={() => handleSaveClick(editedTitle, editedContent)} disabled={!editedTitle.trim()}>
+				<button
+					onClick={() => handleSaveClick(editedTitle, editedContent)}
+					disabled={!editedTitle.trim()}
+				>
 					Save
 				</button>
 				<button onClick={handleDeleteClick} disabled={!editedTitle.trim()}>
@@ -69,7 +73,7 @@ function IssueEdit({
 				</button>
 			</div>
 		</>
-	)
+	);
 }
 
 export default IssueEdit;

@@ -1,7 +1,8 @@
-import EmojiBar from "./EmojiBar"
-import { ReactionData } from "../lib/type";
+import type { ReactionData } from '../lib/type';
 
-export default function IssueView({html, reactions}: {html: string, reactions: ReactionData}) {
+import EmojiBar from './EmojiBar';
+
+export default function IssueView({ html, reactions }: { html: string; reactions: ReactionData }) {
 	return (
 		<>
 			<article
@@ -10,5 +11,5 @@ export default function IssueView({html, reactions}: {html: string, reactions: R
 			/>
 			<EmojiBar reactions={reactions} />
 		</>
-	)
+	);
 }

@@ -3,6 +3,7 @@
 import axios from 'axios';
 
 import { aggregateReactions } from './dataProcessing';
+import markdownToHtml from './markdownToHtml';
 import type {
 	GitHubIssueApiResponse,
 	CommentAPIResponse,
@@ -10,7 +11,6 @@ import type {
 	UpdateIssueParams,
 } from './type';
 import type { CommentData, IssueDetailsData, IssueUpdate } from './type';
-import markdownToHtml from './markdownToHtml';
 
 async function fetchIssueComments(
 	commentUrl: string,
@@ -72,7 +72,7 @@ export const fetchIssueDetails = async (
 			repoOwner: issue.repository_url.split('/')[4],
 			repoName: issue.repository_url.split('/')[5],
 			createdAt: issue.created_at,
-			bodyHtml
+			bodyHtml,
 		};
 	} catch (error) {
 		console.error('Error fetching issue details:', error);
