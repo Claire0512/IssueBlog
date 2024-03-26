@@ -35,6 +35,7 @@ function IssueDetailsPage() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedTitle, setEditedTitle] = useState('');
 	const [editedContent, setEditedContent] = useState('');
+	const [state, setState] = useState('');
 	const isAuthor = session?.username === issueDetails?.userName;
 	const handleEditClick = () => setIsEditing(true);
 	const [previewMode, setPreviewMode] = useState(false);
@@ -62,12 +63,27 @@ function IssueDetailsPage() {
 				issueNumber: parseInt(issueId, 10),
 				title: editedTitle,
 				body: editedContent,
+				state: state,
 			});
 			setIsEditing(false);
 			router.refresh();
 		}
 	};
-	console.log(session);
+	const handleDeleteClick = async () => {
+		if (session && repoName && repoOwner && issueId) {
+			await updateIssue({
+				session,
+				repoOwner,
+				repoName,
+				issueNumber: parseInt(issueId, 10),
+				title: editedTitle,
+				body: editedContent,
+				state: 'closed',
+			});
+			setIsEditing(false);
+			router.push('/post');
+		}
+	};
 	useEffect(() => {
 		const fetchAndProcessIssueDetails = async () => {
 			if (!issueId) return;
@@ -119,6 +135,7 @@ function IssueDetailsPage() {
 				previewMode={previewMode}
 				editedTitle={editedTitle}
 				setEditedTitle={setEditedTitle}
+				setState={setState}
 				editedContent={editedContent}
 				setEditedContent={setEditedContent}
 				issuesHtml={issuesHtml}
@@ -126,6 +143,7 @@ function IssueDetailsPage() {
 				handleSaveClick={handleSaveClick}
 				handleCancelClick={handleCancelClick}
 				handlePreviewClick={handlePreviewClick}
+				handleDeleteClick={handleDeleteClick}
 				reactionEmojis={reactionEmojis}
 			/>
 			{issueDetails.comments.map((comment) => (

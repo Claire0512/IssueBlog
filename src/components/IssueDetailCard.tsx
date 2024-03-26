@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 import IssueContent from '@/src/components/IssueContent';
 import getTimeDifference from '@/src/lib/getTimeDifference';
-import type { IssueDisplayEditProps } from '@/src/lib/type';
+import type { IssueDetailCardProps } from '@/src/lib/type';
 
 function IssueDetailCard({
 	issueDetails,
@@ -13,6 +13,7 @@ function IssueDetailCard({
 	previewMode,
 	editedTitle,
 	setEditedTitle,
+	setState,
 	editedContent,
 	setEditedContent,
 	issuesHtml,
@@ -20,8 +21,9 @@ function IssueDetailCard({
 	handleSaveClick,
 	handleCancelClick,
 	handlePreviewClick,
+	handleDeleteClick,
 	reactionEmojis,
-}: IssueDisplayEditProps) {
+}: IssueDetailCardProps) {
 	return (
 		<div className="flex w-[70%] pb-8">
 			<Image
@@ -56,12 +58,14 @@ function IssueDetailCard({
 					previewMode={previewMode}
 					editedTitle={editedTitle}
 					setEditedTitle={setEditedTitle}
+					setState={setState}
 					editedContent={editedContent}
 					setEditedContent={setEditedContent}
 					issuesHtml={issuesHtml}
 					handleSaveClick={handleSaveClick}
 					handleCancelClick={handleCancelClick}
 					handlePreviewClick={handlePreviewClick}
+					handleDeleteClick={handleDeleteClick}
 					reactionEmojis={reactionEmojis}
 					issueDetails={issueDetails}
 				/>

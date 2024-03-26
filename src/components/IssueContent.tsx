@@ -1,21 +1,23 @@
 import React from 'react';
 
-import type { IssueDetailsEditProps } from '../lib/type';
+import type { IssueContentProps } from '../lib/type';
 
-function IssueDetailsEdit({
+function IssueContent({
 	isEditing,
 	previewMode,
 	editedTitle,
 	setEditedTitle,
+	setState,
 	editedContent,
 	setEditedContent,
 	issuesHtml,
 	handleSaveClick,
+	handleDeleteClick,
 	handleCancelClick,
 	handlePreviewClick,
 	reactionEmojis,
 	issueDetails,
-}: IssueDetailsEditProps) {
+}: IssueContentProps) {
 	return isEditing ? (
 		<>
 			<div className="m-4">
@@ -53,6 +55,9 @@ function IssueDetailsEdit({
 				<button onClick={handleSaveClick} disabled={!editedTitle.trim()}>
 					Save
 				</button>
+				<button onClick={handleDeleteClick} disabled={!editedTitle.trim()}>
+					Delete
+				</button>
 				<button onClick={handleCancelClick}>Cancel</button>
 				<button onClick={handlePreviewClick}>
 					{previewMode ? 'Back to Edit' : 'Preview'}
@@ -81,4 +86,4 @@ function IssueDetailsEdit({
 	);
 }
 
-export default IssueDetailsEdit;
+export default IssueContent;

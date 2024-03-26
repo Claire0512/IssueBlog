@@ -12,7 +12,7 @@ import type {
 
 export const fetchIssueData = async (
 	page: number,
-	perPage = 5,
+	perPage = 10,
 	sort = 'created',
 	order = 'desc',
 ): Promise<IssueData[]> => {
@@ -24,7 +24,7 @@ export const fetchIssueData = async (
 	let issuesData: IssueData[] = [];
 	try {
 		const issuesResponse = await axios.get(
-			`https://api.github.com/search/issues?q=author:${process.env.NEXT_PUBLIC_USER_NAME}+is:issue+user:${process.env.NEXT_PUBLIC_USER_NAME}&sort=${sort}&order=${order}&page=${page}&per_page=${perPage}`,
+			`https://api.github.com/search/issues?q=author:${process.env.NEXT_PUBLIC_USER_NAME}+is:issue+user:${process.env.NEXT_PUBLIC_USER_NAME}+state:open&sort=${sort}&order=${order}&page=${page}&per_page=${perPage}`,
 			{
 				headers: {
 					Authorization: `token ${process.env.GITHUB_PAT}`,

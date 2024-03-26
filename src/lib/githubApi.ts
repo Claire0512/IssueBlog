@@ -96,6 +96,7 @@ export const updateIssue = async ({
 	issueNumber,
 	title,
 	body,
+	state,
 	session,
 }: UpdateIssueParams): Promise<void> => {
 	if (!session || !repoOwner || !repoName || !issueNumber) {
@@ -109,6 +110,7 @@ export const updateIssue = async ({
 			{
 				title,
 				body,
+				state,
 			},
 			{
 				headers: {

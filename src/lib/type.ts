@@ -106,31 +106,35 @@ export type UpdateIssueParams = {
 	issueNumber: number;
 	title: string;
 	body: string;
+	state: string;
 	session: Session | null;
 };
 
-export type IssueDetailsEditProps = {
+export type IssueContentProps = {
 	isEditing: boolean;
 	previewMode: boolean;
 	editedTitle: string;
 	setEditedTitle: (title: string) => void;
+	setState: (state: string) => void;
 	editedContent: string;
 	setEditedContent: (content: string) => void;
 	issuesHtml: string;
 	handleSaveClick: () => Promise<void>;
 	handleCancelClick: () => void;
 	handlePreviewClick: () => void;
+	handleDeleteClick: () => Promise<void>;
 	reactionEmojis: { [key: string]: string };
 	issueDetails: IssueDetailsData;
 };
 
-export type IssueDisplayEditProps = {
+export type IssueDetailCardProps = {
 	issueDetails: IssueDetailsData;
 	isAuthor: boolean;
 	isEditing: boolean;
 	previewMode: boolean;
 	editedTitle: string;
 	setEditedTitle: (title: string) => void;
+	setState: (state: string) => void;
 	editedContent: string;
 	setEditedContent: (content: string) => void;
 	issuesHtml: string;
@@ -138,5 +142,6 @@ export type IssueDisplayEditProps = {
 	handleSaveClick: () => Promise<void>;
 	handleCancelClick: () => void;
 	handlePreviewClick: () => void;
+	handleDeleteClick: () => Promise<void>;
 	reactionEmojis: { [key: string]: string };
 };
