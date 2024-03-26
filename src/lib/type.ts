@@ -98,6 +98,7 @@ export type IssueDetailsData = {
 	comments: CommentData[];
 	reactions: ReactionData;
 	createdAt: string;
+	bodyHtml: string;
 };
 
 export type UpdateIssueParams = {
@@ -122,13 +123,7 @@ export type IssueEditProps = {
 };
 
 export type IssueDetailCardProps = {
-	issueDetails: IssueDetailsData;
-	isAuthor: boolean;
-	editedTitle: string;
-	setEditedTitle: (title: string) => void;
-	editedContent: string;
-	setEditedContent: (content: string) => void;
-	issuesHtml: string;
+	issueDetails: Omit<IssueDetailsData, 'comment'>;
 };
 
 export type IssueUpdate = {

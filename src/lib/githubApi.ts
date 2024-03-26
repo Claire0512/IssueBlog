@@ -10,6 +10,7 @@ import type {
 	UpdateIssueParams,
 } from './type';
 import type { CommentData, IssueDetailsData, IssueUpdate } from './type';
+import markdownToHtml from './markdownToHtml';
 
 async function fetchIssueComments(
 	commentUrl: string,
@@ -23,7 +24,7 @@ async function fetchIssueComments(
 	const commentsWithReactions = await Promise.all(
 		commentsResponse.data.map(async (comment: CommentAPIResponse) => {
 			const reactions = await fetchReactionsForComment(repoOwner, repoName, comment.id);
-
+			const bodyHtml = await markdownToHtml(comment.body);
 			return {
 				id: comment.id,
 				user: {
@@ -33,6 +34,8 @@ async function fetchIssueComments(
 				body: comment.body,
 				createdAt: comment.created_at,
 				reactions,
+				bodyHtml,
+				userName: comment.user.login,
 			};
 		}),
 	);
@@ -56,6 +59,7 @@ export const fetchIssueDetails = async (
 		);
 		const issue: GitHubIssueApiResponse = issueResponse.data;
 		const comments = await fetchIssueComments(issue.comments_url ?? '', repoName, repoOwner);
+		const bodyHtml = await markdownToHtml(issue.body);
 		return {
 			number: issue.number,
 			htmlUrl: issue.html_url,
@@ -63,11 +67,12 @@ export const fetchIssueDetails = async (
 			userName: issue.user.login,
 			avatarUrl: issue.user.avatar_url,
 			content: issue.body,
-			comments: comments ?? [],
+			comments: comments,
 			reactions: issue.reactions,
 			repoOwner: issue.repository_url.split('/')[4],
 			repoName: issue.repository_url.split('/')[5],
 			createdAt: issue.created_at,
+			bodyHtml
 		};
 	} catch (error) {
 		console.error('Error fetching issue details:', error);

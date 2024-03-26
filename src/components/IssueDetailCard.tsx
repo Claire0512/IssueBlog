@@ -13,17 +13,15 @@ import { useSession } from 'next-auth/react';
 
 function IssueDetailCard({
 	issueDetails,
-	isAuthor,
-	editedTitle,
-	setEditedTitle,
-	editedContent,
-	setEditedContent,
-	issuesHtml,
 }: IssueDetailCardProps) {
 
 	const router = useRouter();
-	const [isEditing, setIsEditing] = useState(false);
 	const {data: session} = useSession();
+
+	const isAuthor = session?.username === issueDetails.userName;
+	const [isEditing, setIsEditing] = useState(false);
+	const [editedTitle, setEditedTitle] = useState(issueDetails.title);
+	const [editedContent, setEditedContent] = useState(issueDetails.content);
 
 	const handleCancelClick = () => {
 		setIsEditing(false);
@@ -79,12 +77,12 @@ function IssueDetailCard({
 						setEditedTitle={setEditedTitle}
 						editedContent={editedContent}
 						setEditedContent={setEditedContent}
-						initialHtml={issuesHtml}
+						initialHtml={issueDetails.bodyHtml}
 						handleSaveClick={handleSaveClick}
 						handleCancelClick={handleCancelClick}
 						handleDeleteClick={handleDeleteClick}
 					/> :
-					<IssueView html={issuesHtml} reactions={issueDetails.reactions} />
+					<IssueView html={issueDetails.bodyHtml} reactions={issueDetails.reactions} />
 				}
 			</div>
 		</div>
