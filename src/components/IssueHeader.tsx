@@ -1,6 +1,6 @@
 import getTimeDifference from '@/src/lib/getTimeDifference';
 
-export default function IssueHeader({
+function IssueHeader({
 	username,
 	createdAt,
 	canEdit = false,
@@ -30,3 +30,5 @@ export default function IssueHeader({
 		</div>
 	);
 }
+
+export default IssueHeader;

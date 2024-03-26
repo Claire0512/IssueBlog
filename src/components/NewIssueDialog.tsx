@@ -26,7 +26,7 @@ import { createIssue } from '@/src/lib/actions';
 import markdownToHtml from '@/src/lib/markdownToHtml';
 import type { RepoData } from '@/src/lib/type';
 
-function NewPostDialog({ repos }: { repos: RepoData[] }) {
+function NewIssueDialog({ repos }: { repos: RepoData[] }) {
 	const [issueTitle, setIssueTitle] = useState('');
 	const [issueContent, setIssueContent] = useState('');
 	const [selectedRepo, setSelectedRepo] = useState('');
@@ -101,6 +101,7 @@ function NewPostDialog({ repos }: { repos: RepoData[] }) {
 					New Post
 				</DialogHeader>
 				<Label htmlFor="repo-select">Repo:</Label>
+				{repoError && <p className="text-red-500">{repoError}</p>}
 				<Select onValueChange={setSelectedRepo} value={selectedRepo}>
 					<SelectTrigger
 						aria-label="Repository"
@@ -117,6 +118,7 @@ function NewPostDialog({ repos }: { repos: RepoData[] }) {
 					</SelectContent>
 				</Select>
 				<Label htmlFor="issue-title">Title:</Label>
+				{titleError && <p className="text-red-500">{titleError}</p>}
 				<Input
 					id="issue-title"
 					placeholder="Issue Title"
@@ -125,6 +127,7 @@ function NewPostDialog({ repos }: { repos: RepoData[] }) {
 					className={`rounded-md border-[1px] border-[#4125172f] p-4  border-${titleError ? 'red-500' : '[#4125172f]'} focus:ring-[#412517]`}
 				/>
 				<Label htmlFor="issue-content">Content:</Label>
+				{contentError && <p className="text-red-500">{contentError}</p>}
 				{previewMode ? (
 					<article
 						className="prose flex-1 break-words rounded-md border-[1px] border-[#4125172f] p-4 focus:outline-[#412517]"
@@ -154,4 +157,4 @@ function NewPostDialog({ repos }: { repos: RepoData[] }) {
 		</Dialog>
 	);
 }
-export default NewPostDialog;
+export default NewIssueDialog;

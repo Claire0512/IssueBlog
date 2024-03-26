@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 import { useScroll } from '@react-hooks-library/core';
 
-import NewPostDialog from '@/src/components/NewPostDialog';
+import NewPostDialog from '@/src/components/NewIssueDialog';
 import {
 	Select,
 	SelectTrigger,
@@ -47,7 +47,7 @@ function MyPostsPage() {
 	useEffect(() => {
 		if (consecutiveFetch) setConsecutiveFetch(false);
 		const fetchData = async () => {
-			const issueData = await fetchIssueData(page, 5, sortOption);
+			const issueData = await fetchIssueData(page, 10, sortOption);
 			if (issueData.length < 5) {
 				setHasMore(false);
 			}
