@@ -41,7 +41,7 @@ export type GitHubIssueApiResponse = {
 		login: string;
 		avatar_url: string;
 	};
-	reactions?: ReactionData[];
+	reactions: ReactionData;
 	comments_url?: string;
 	created_at: string;
 };
@@ -104,42 +104,35 @@ export type UpdateIssueParams = {
 	repoOwner: string;
 	repoName: string;
 	issueNumber: number;
-	title: string;
-	body: string;
-	state: string;
+	title?: string;
+	body?: string;
+	state?: string;
 	session: Session | null;
 };
 
-export type IssueContentProps = {
-	isEditing: boolean;
-	previewMode: boolean;
+export type IssueEditProps = {
 	editedTitle: string;
 	setEditedTitle: (title: string) => void;
-	setState: (state: string) => void;
 	editedContent: string;
 	setEditedContent: (content: string) => void;
-	issuesHtml: string;
+	initialHtml: string;
 	handleSaveClick: () => Promise<void>;
 	handleCancelClick: () => void;
-	handlePreviewClick: () => void;
 	handleDeleteClick: () => Promise<void>;
-	issueDetails: IssueDetailsData;
 };
 
 export type IssueDetailCardProps = {
 	issueDetails: IssueDetailsData;
 	isAuthor: boolean;
-	isEditing: boolean;
-	previewMode: boolean;
 	editedTitle: string;
 	setEditedTitle: (title: string) => void;
-	setState: (state: string) => void;
 	editedContent: string;
 	setEditedContent: (content: string) => void;
 	issuesHtml: string;
-	handleEditClick: () => void;
-	handleSaveClick: () => Promise<void>;
-	handleCancelClick: () => void;
-	handlePreviewClick: () => void;
-	handleDeleteClick: () => Promise<void>;
 };
+
+export type IssueUpdate = {
+	title?: string;
+	body?:string;
+	state?: string;
+}

@@ -1,28 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Image from 'next/image';
 
-import IssueContent from '@/src/components/IssueContent';
-import getTimeDifference from '@/src/lib/getTimeDifference';
 import type { IssueDetailCardProps } from '@/src/lib/type';
+import IssueHeader from './IssueHeader';
+import IssueView from './IssueView';
+import IssueEdit from '@/src/components/IssueEdit';
+
+import { updateIssue } from '@/src/lib/githubApi';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 function IssueDetailCard({
 	issueDetails,
 	isAuthor,
-	isEditing,
-	previewMode,
 	editedTitle,
 	setEditedTitle,
-	setState,
 	editedContent,
 	setEditedContent,
 	issuesHtml,
-	handleEditClick,
-	handleSaveClick,
-	handleCancelClick,
-	handlePreviewClick,
-	handleDeleteClick,
 }: IssueDetailCardProps) {
+
+	const router = useRouter();
+	const [isEditing, setIsEditing] = useState(false);
+	const {data: session} = useSession();
+
+	const handleCancelClick = () => {
+		setIsEditing(false);
+		setEditedTitle(issueDetails?.title || '');
+		setEditedContent(issueDetails?.content || '');
+	};
+
+	const handleSaveClick = async () => {
+		await updateIssue({
+			session,
+			repoOwner: issueDetails.repoOwner,
+			repoName: issueDetails.repoName,
+			issueNumber: issueDetails.number,
+			title: editedTitle,
+			body: editedContent,
+		});
+		setIsEditing(false);
+		router.refresh();
+	};
+
+	const handleDeleteClick = async () => {
+		await updateIssue({
+			session,
+			repoOwner: issueDetails.repoOwner,
+			repoName: issueDetails.repoName,
+			issueNumber: issueDetails.number,
+			state: 'closed',
+		});
+		setIsEditing(false);
+		router.push('/post');
+	};
+
 	return (
 		<div className="flex w-[70%] pb-8">
 			<Image
@@ -34,40 +67,25 @@ function IssueDetailCard({
 				className="me-6 self-start rounded-full"
 			/>
 			<div className="flex flex-1 flex-col overflow-auto rounded-lg bg-white bg-opacity-40">
-				<div className="flex w-full flex-1 items-center justify-between rounded-t-lg bg-[#fac23e80] p-2">
-					<div className="flex items-center">
-						<p className="ml-4 text-left font-bold text-black">
-							{issueDetails.userName}
-						</p>
-						<div className="ml-4 flex items-center justify-center text-left text-sm text-gray-500">
-							{getTimeDifference(issueDetails.createdAt)}
-						</div>
-					</div>
-					{isAuthor && !isEditing && (
-						<button
-							onClick={handleEditClick}
-							className="pe-4 text-right font-semibold text-gray-800"
-						>
-							Edit
-						</button>
-					)}
-				</div>
-
-				<IssueContent
-					isEditing={isEditing}
-					previewMode={previewMode}
-					editedTitle={editedTitle}
-					setEditedTitle={setEditedTitle}
-					setState={setState}
-					editedContent={editedContent}
-					setEditedContent={setEditedContent}
-					issuesHtml={issuesHtml}
-					handleSaveClick={handleSaveClick}
-					handleCancelClick={handleCancelClick}
-					handlePreviewClick={handlePreviewClick}
-					handleDeleteClick={handleDeleteClick}
-					issueDetails={issueDetails}
+				<IssueHeader 
+					username={issueDetails.userName} 
+					createdAt={issueDetails.createdAt} 
+					canEdit={isAuthor && !isEditing} 
+					handleEditClick={() => setIsEditing(true)}
 				/>
+				{ isEditing ?
+					<IssueEdit
+						editedTitle={editedTitle}
+						setEditedTitle={setEditedTitle}
+						editedContent={editedContent}
+						setEditedContent={setEditedContent}
+						initialHtml={issuesHtml}
+						handleSaveClick={handleSaveClick}
+						handleCancelClick={handleCancelClick}
+						handleDeleteClick={handleDeleteClick}
+					/> :
+					<IssueView html={issuesHtml} reactions={issueDetails.reactions} />
+				}
 			</div>
 		</div>
 	);

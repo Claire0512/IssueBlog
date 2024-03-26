@@ -9,7 +9,7 @@ import type {
 	ReactionData,
 	UpdateIssueParams,
 } from './type';
-import type { CommentData, IssueDetailsData } from './type';
+import type { CommentData, IssueDetailsData, IssueUpdate } from './type';
 
 async function fetchIssueComments(
 	commentUrl: string,
@@ -56,7 +56,6 @@ export const fetchIssueDetails = async (
 		);
 		const issue: GitHubIssueApiResponse = issueResponse.data;
 		const comments = await fetchIssueComments(issue.comments_url ?? '', repoName, repoOwner);
-		const reactions = issue.reactions;
 		return {
 			number: issue.number,
 			htmlUrl: issue.html_url,
@@ -65,7 +64,7 @@ export const fetchIssueDetails = async (
 			avatarUrl: issue.user.avatar_url,
 			content: issue.body,
 			comments: comments ?? [],
-			reactions: reactions ?? [],
+			reactions: issue.reactions,
 			repoOwner: issue.repository_url.split('/')[4],
 			repoName: issue.repository_url.split('/')[5],
 			createdAt: issue.created_at,
@@ -105,13 +104,14 @@ export const updateIssue = async ({
 	}
 
 	try {
+		const requestData: IssueUpdate = {};
+		if (title) requestData.title = title;
+		if (body) requestData.body = body;
+		if (state) requestData.state = state;
+
 		const response = await axios.patch(
 			`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${issueNumber}`,
-			{
-				title,
-				body,
-				state,
-			},
+			requestData,
 			{
 				headers: {
 					Authorization: `token ${session.accessToken}`,

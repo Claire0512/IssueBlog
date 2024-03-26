@@ -1,25 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
+import type { IssueEditProps } from '../lib/type';
+import markdownToHtml from '@/src/lib/markdownToHtml';
 
-import type { IssueContentProps } from '../lib/type';
-
-import EmojiBar from './EmojiBar';
-
-function IssueContent({
-	isEditing,
-	previewMode,
+function IssueEdit({
 	editedTitle,
 	setEditedTitle,
-	setState,
 	editedContent,
 	setEditedContent,
-	issuesHtml,
+	initialHtml,
 	handleSaveClick,
 	handleDeleteClick,
 	handleCancelClick,
-	handlePreviewClick,
-	issueDetails,
-}: IssueContentProps) {
-	return isEditing ? (
+}: IssueEditProps) {
+
+	const [previewMode, setPreviewMode] = useState(false);
+	const [issuesHtml, setIssuesHtml] = useState(initialHtml);
+
+	const handlePreviewClick = async () => {
+		if (!previewMode) {
+			const html = await markdownToHtml(editedContent);
+			setIssuesHtml(html);
+		}
+		setPreviewMode(!previewMode);
+	};
+
+	return (
 		<>
 			<div className="m-4">
 				<label htmlFor="issue-title" className="block text-sm font-medium text-gray-700">
@@ -65,15 +70,7 @@ function IssueContent({
 				</button>
 			</div>
 		</>
-	) : (
-		<>
-			<article
-				className="prose m-6 max-w-none break-words"
-				dangerouslySetInnerHTML={{ __html: issuesHtml }}
-			/>
-			<EmojiBar reactions={issueDetails.reactions} />
-		</>
-	);
+	)
 }
 
-export default IssueContent;
+export default IssueEdit;

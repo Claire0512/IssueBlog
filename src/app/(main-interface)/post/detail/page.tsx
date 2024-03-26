@@ -22,58 +22,11 @@ function IssueDetailsPage() {
 	const repoOwner = searchParams.get('repoOwner');
 	const [issueDetails, setIssueDetails] = useState<IssueDetailsData | null>(null);
 	const [issuesHtml, setIssuesHtml] = useState('');
-	const [isEditing, setIsEditing] = useState(false);
 	const [editedTitle, setEditedTitle] = useState('');
 	const [editedContent, setEditedContent] = useState('');
-	const [state, setState] = useState('');
 	const isAuthor = session?.username === issueDetails?.userName;
-	const handleEditClick = () => setIsEditing(true);
-	const [previewMode, setPreviewMode] = useState(false);
-	const router = useRouter();
-	const handlePreviewClick = async () => {
-		if (!previewMode) {
-			const html = await markdownToHtml(editedContent);
-			setIssuesHtml(html);
-		}
-		setPreviewMode(!previewMode);
-	};
+	
 
-	const handleCancelClick = () => {
-		setIsEditing(false);
-		setEditedTitle(issueDetails?.title || '');
-		setEditedContent(issueDetails?.content || '');
-	};
-
-	const handleSaveClick = async () => {
-		if (session && repoName && repoOwner && issueId) {
-			await updateIssue({
-				session,
-				repoOwner,
-				repoName,
-				issueNumber: parseInt(issueId, 10),
-				title: editedTitle,
-				body: editedContent,
-				state: state,
-			});
-			setIsEditing(false);
-			router.refresh();
-		}
-	};
-	const handleDeleteClick = async () => {
-		if (session && repoName && repoOwner && issueId) {
-			await updateIssue({
-				session,
-				repoOwner,
-				repoName,
-				issueNumber: parseInt(issueId, 10),
-				title: editedTitle,
-				body: editedContent,
-				state: 'closed',
-			});
-			setIsEditing(false);
-			router.push('/post');
-		}
-	};
 	useEffect(() => {
 		const fetchAndProcessIssueDetails = async () => {
 			if (!issueId) return;
@@ -121,19 +74,11 @@ function IssueDetailsPage() {
 			<IssueDetailCard
 				issueDetails={issueDetails}
 				isAuthor={isAuthor}
-				isEditing={isEditing}
-				previewMode={previewMode}
 				editedTitle={editedTitle}
 				setEditedTitle={setEditedTitle}
-				setState={setState}
 				editedContent={editedContent}
 				setEditedContent={setEditedContent}
 				issuesHtml={issuesHtml}
-				handleEditClick={handleEditClick}
-				handleSaveClick={handleSaveClick}
-				handleCancelClick={handleCancelClick}
-				handlePreviewClick={handlePreviewClick}
-				handleDeleteClick={handleDeleteClick}
 			/>
 			{issueDetails.comments.map((comment) => (
 				<IssueComment key={comment.id} comment={comment} />
