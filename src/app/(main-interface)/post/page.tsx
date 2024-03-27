@@ -126,7 +126,7 @@ function MyPostsPage() {
 
 				{hasMore && <div>Loading more...</div>}
 			</div>
-			{session && session.username === process.env.NEXT_PUBLIC_USER_NAME && (
+			{session && session.username === process.env.NEXT_PUBLIC_AUTHOR_GITHUB_USERNAME && (
 				<NewPostDialog repos={repos} />
 			)}
 		</div>

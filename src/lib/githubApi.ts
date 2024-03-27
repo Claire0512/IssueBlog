@@ -18,7 +18,7 @@ async function fetchIssueComments(
 	repoOwner: string,
 ): Promise<CommentData[]> {
 	const commentsResponse = await axios.get(commentUrl, {
-		headers: { Authorization: `token ${process.env.GITHUB_PAT}` },
+		headers: { Authorization: `token ${process.env.AUTHOR_GITHUB_PAT}` },
 	});
 
 	const commentsWithReactions = await Promise.all(
@@ -53,7 +53,7 @@ export const fetchIssueDetails = async (
 			`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${issueNumber}`,
 			{
 				headers: {
-					Authorization: `token ${process.env.GITHUB_PAT}`,
+					Authorization: `token ${process.env.AUTHOR_GITHUB_PAT}`,
 				},
 			},
 		);
@@ -87,7 +87,7 @@ async function fetchReactionsForComment(
 	const reactionsUrl = `https://api.github.com/repos/${owner}/${repo}/issues/comments/${commentId}/reactions`;
 	const reactionsResponse = await axios.get(reactionsUrl, {
 		headers: {
-			Authorization: `token ${process.env.GITHUB_PAT}`,
+			Authorization: `token ${process.env.AUTHOR_GITHUB_PAT}`,
 			Accept: 'application/vnd.github.squirrel-girl-preview+json',
 		},
 	});

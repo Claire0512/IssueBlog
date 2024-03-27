@@ -47,7 +47,7 @@ function ProfilePage() {
 						</h2>
 					)}
 				</div>
-				{session?.username === process.env.NEXT_PUBLIC_USER_NAME && (
+				{session?.username === process.env.NEXT_PUBLIC_AUTHOR_GITHUB_USERNAME && (
 					<div className="mt-8 flex w-full items-center justify-center gap-4">
 						<Card className="w-[14%]">
 							<CardContent className="rounded-xl border-l-[16px] border-[#FAC13E] bg-white">
