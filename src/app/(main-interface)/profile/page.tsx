@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 
 import { Card, CardContent, CardHeader } from '@/src/components/ui/card';
-import { fetchGithubData } from '@/src/lib/actions';
+import { fetchGithubData } from '@/src/lib/githubApi';
 
 function ProfilePage() {
 	const [githubData, setGithubData] = useState({

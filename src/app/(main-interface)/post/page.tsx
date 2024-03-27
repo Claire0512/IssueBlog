@@ -17,8 +17,8 @@ import {
 	SelectContent,
 	SelectItem,
 } from '@/src/components/ui/select';
-import { fetchIssueData, fetchUserRepoList } from '@/src/lib/actions';
 import getTimeDifference from '@/src/lib/getTimeDifference';
+import { fetchIssueData, fetchUserRepoList } from '@/src/lib/githubApi';
 import type { RepoData, IssueData } from '@/src/lib/type';
 
 function MyPostsPage() {
