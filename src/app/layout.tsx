@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 
-import type { Session } from 'next-auth';
 import { Inter } from 'next/font/google';
+import { getServerSession } from 'next-auth/next';
 
 import Provider from '@/src/app/context/client-provider';
-
+import { options } from './api/auth/[...nextauth]/options';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -14,12 +14,9 @@ export const metadata = {
 	title: 'NextAuth Demo',
 };
 
-interface RootLayoutProps {
-	children: ReactNode;
-	session: Session | null;
-}
 
-function RootLayout({ children, session }: RootLayoutProps) {
+async function RootLayout({ children }: { children: ReactNode }) {
+	const session = await getServerSession(options);
 	return (
 		<html lang="en">
 			<body className={`${inter.className} min-h-screen bg-gray-100`}>

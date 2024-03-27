@@ -18,7 +18,7 @@ function HomePage() {
 				</div>
 			</div>
 			<div className="absolute bottom-0 right-0 p-1">
-				<Image src="/1.png" alt="" width={350} height={350} priority={true} />
+				<Image src="/author2.png" alt="" width={350} height={350} priority={true} />
 			</div>
 		</>
 	);

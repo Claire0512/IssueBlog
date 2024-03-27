@@ -22,7 +22,7 @@ import {
 	SelectItem,
 	SelectContent,
 } from '@/src/components/ui/select';
-import { createIssue } from '@/src/lib/actions';
+import { createIssue } from '@/src/lib/githubApi';
 import markdownToHtml from '@/src/lib/markdownToHtml';
 import type { RepoData } from '@/src/lib/type';
 

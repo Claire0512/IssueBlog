@@ -6,7 +6,7 @@ function HomePage() {
 			<div className="flex h-full w-2/3">
 				<div className="flex w-1/2 justify-center">
 					<Image
-						src="/3.png"
+						src="/author.png"
 						alt="DINU the Dog"
 						width={350}
 						height={350}

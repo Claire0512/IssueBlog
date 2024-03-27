@@ -65,7 +65,8 @@ yarn
 #### 1.
 
 ```bash
-yarn dev
+yarn build
+yarn start
 ```
 
 #### 2. 在瀏覽器訪問 `http://localhost:3000`
