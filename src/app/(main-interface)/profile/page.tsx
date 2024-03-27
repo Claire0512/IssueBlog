@@ -26,18 +26,18 @@ function ProfilePage() {
 	}, [session, status]);
 
 	return (
-		<div className="flex flex-1 justify-center pt-32">
-			<div className="w-full">
+		<div className="flex h-full w-full flex-1 items-center justify-center pt-20">
+			<div className="h-full w-full">
 				<div className="text-center">
 					{session?.user?.image && (
 						<div className="flex justify-center">
 							<Image
 								src={session.user.image}
-								width={100}
-								height={100}
+								width={150}
+								height={150}
 								alt={`Profile Pic for ${session.user.name}`}
 								priority={true}
-								className="mt-8 rounded-full"
+								className="rounded-full"
 							/>
 						</div>
 					)}

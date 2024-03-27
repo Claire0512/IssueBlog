@@ -11,8 +11,8 @@ function Navbar() {
 	const { data: session } = useSession();
 	return (
 		<nav className="fixed flex h-[72px] w-full items-center justify-between bg-[#FAC13E] px-8">
-			<h1 className="px-16 text-[32px] font-bold text-[#412517]">DINU's Blog</h1>
-			<div>
+			<h1 className="px-16 text-left text-[32px] font-bold text-[#412517]">DINU's Blog</h1>
+			<div className="flex flex-1 justify-end">
 				<Link
 					href="/home"
 					className={`text-[24px] font-semibold text-[#412517] ${buttonVariants({ variant: 'ghost' })}`}

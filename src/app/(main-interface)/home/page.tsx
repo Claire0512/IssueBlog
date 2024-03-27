@@ -2,14 +2,14 @@ import Image from 'next/image';
 
 function HomePage() {
 	return (
-		<div className="mt-36 flex items-center justify-center">
-			<div className="flex w-full max-w-6xl">
+		<div className="flex h-full w-full flex-1 items-center justify-center pt-20">
+			<div className="flex h-full w-2/3">
 				<div className="flex w-1/2 justify-center">
 					<Image
 						src="/3.png"
 						alt="DINU the Dog"
-						width={400}
-						height={400}
+						width={350}
+						height={350}
 						priority={true}
 					/>
 				</div>
