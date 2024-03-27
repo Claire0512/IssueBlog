@@ -33,6 +33,8 @@
 
 ## 網站連結
 
+https://dinu-blog.vercel.app/
+
 ## 本地安裝方式
 
 ### 環境變數
@@ -52,7 +54,6 @@ cp .env.example .env
 **AUTHOR_GITHUB_USER_ID**：填入作者的 GitHub User ID。
 **NEXT_PUBLIC_AUTHOR_GITHUB_USERNAME**：填入作者的 GitHub Username。
 **NEXTAUTH_SECRET**：填入一串安全的隨機字符，用於 NextAuth.js 進行安全簽名和加密。
-**NEXTAUTH_URL**：填入網站的完整 URL。
 
 ### 安裝套件
 
