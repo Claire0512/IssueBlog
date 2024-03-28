@@ -25,7 +25,7 @@ function MyPostsPage() {
 	const { data: session } = useSession();
 	const [issues, setIssues] = useState<IssueData[]>([]);
 	const [sortOption, setSortOption] = useState('created');
-
+	const [refreshKey, setRefreshKey] = useState(0);
 	const [repos, setRepos] = useState<RepoData[]>([]);
 	const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(true);
@@ -44,6 +44,13 @@ function MyPostsPage() {
 		setHasMore(true);
 	};
 
+	const refreshIssues = () => {
+		setPage(1);
+		setIssues([]);
+		setHasMore(true);
+		setRefreshKey((prevKey) => prevKey + 1);
+	};
+
 	useEffect(() => {
 		if (consecutiveFetch) setConsecutiveFetch(false);
 		const fetchData = async () => {
@@ -60,7 +67,7 @@ function MyPostsPage() {
 				setScroll({ x: 0, y: 0 });
 			});
 		}
-	}, [isBottom, page, hasMore, consecutiveFetch, sortOption]);
+	}, [isBottom, page, hasMore, consecutiveFetch, sortOption, refreshKey]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -118,6 +125,7 @@ function MyPostsPage() {
 						<Link
 							href={`/post/detail?issueId=${issue.number}&repoName=${issue.repoName}&repoOwner=${issue.repoOwner}`}
 							className="px-4  py-2 text-lg font-bold text-[#412517]"
+							prefetch={true}
 						>
 							View More
 						</Link>
@@ -127,7 +135,7 @@ function MyPostsPage() {
 				{hasMore && <div>Loading more...</div>}
 			</div>
 			{session && session.username === process.env.NEXT_PUBLIC_AUTHOR_GITHUB_USERNAME && (
-				<NewPostDialog repos={repos} />
+				<NewPostDialog repos={repos} onIssueCreated={refreshIssues} />
 			)}
 		</div>
 	);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -11,10 +11,10 @@ import type { IssueDetailCardProps } from '@/src/lib/type';
 import IssueHeader from './IssueHeader';
 import IssueView from './IssueView';
 
-function IssueDetailCard({ issueDetails }: IssueDetailCardProps) {
+function IssueDetailCard({ issueDetails, setIssueDetails }: IssueDetailCardProps) {
 	const router = useRouter();
 	const { data: session } = useSession();
-
+	const [issue, setIssue] = useState(issueDetails);
 	const isAuthor = session?.username === issueDetails.userName;
 	const [isEditing, setIsEditing] = useState(false);
 
@@ -25,32 +25,42 @@ function IssueDetailCard({ issueDetails }: IssueDetailCardProps) {
 	const handleSaveClick = async (title: string, content: string) => {
 		await updateIssue({
 			session,
-			repoOwner: issueDetails.repoOwner,
-			repoName: issueDetails.repoName,
-			issueNumber: issueDetails.number,
-			title,
+			repoOwner: issue.repoOwner,
+			repoName: issue.repoName,
+			issueNumber: issue.number,
+			title: title,
 			body: content,
 		});
 		setIsEditing(false);
-		router.refresh();
+		const newIssueDetails = {
+			...issueDetails,
+			title: title,
+			content: content,
+		};
+		setIssueDetails(newIssueDetails);
+		setIssue(newIssueDetails);
 	};
 
 	const handleDeleteClick = async () => {
 		await updateIssue({
 			session,
-			repoOwner: issueDetails.repoOwner,
-			repoName: issueDetails.repoName,
-			issueNumber: issueDetails.number,
+			repoOwner: issue.repoOwner,
+			repoName: issue.repoName,
+			issueNumber: issue.number,
 			state: 'closed',
 		});
 		setIsEditing(false);
 		router.push('/post');
 	};
 
+	useEffect(() => {
+		setIssue(issueDetails);
+	}, [issueDetails]);
+
 	return (
 		<div className="flex w-[70%] pb-8">
 			<Image
-				src={issueDetails.avatarUrl}
+				src={issue.avatarUrl}
 				alt="Author's avatar"
 				width={60}
 				height={60}
@@ -59,21 +69,21 @@ function IssueDetailCard({ issueDetails }: IssueDetailCardProps) {
 			/>
 			<div className="flex flex-1 flex-col overflow-auto rounded-lg bg-white bg-opacity-40">
 				<IssueHeader
-					username={issueDetails.userName}
-					createdAt={issueDetails.createdAt}
+					username={issue.userName}
+					createdAt={issue.createdAt}
 					canEdit={isAuthor && !isEditing}
 					handleEditClick={() => setIsEditing(true)}
 				/>
 				{isEditing ? (
 					<IssueEdit
-						title={issueDetails.title}
-						content={issueDetails.content}
+						title={issue.title}
+						content={issue.content}
 						handleSaveClick={handleSaveClick}
 						handleCancelClick={handleCancelClick}
 						handleDeleteClick={handleDeleteClick}
 					/>
 				) : (
-					<IssueView html={issueDetails.bodyHtml} reactions={issueDetails.reactions} />
+					<IssueView html={issue.bodyHtml} reactions={issue.reactions} />
 				)}
 			</div>
 		</div>

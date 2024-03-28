@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 
 import { Button } from '@/src/components/ui/button';
 import {
@@ -26,7 +25,13 @@ import { createIssue } from '@/src/lib/githubApi';
 import markdownToHtml from '@/src/lib/markdownToHtml';
 import type { RepoData } from '@/src/lib/type';
 
-function NewIssueDialog({ repos }: { repos: RepoData[] }) {
+function NewIssueDialog({
+	repos,
+	onIssueCreated,
+}: {
+	repos: RepoData[];
+	onIssueCreated: () => void;
+}) {
 	const [issueTitle, setIssueTitle] = useState('');
 	const [issueContent, setIssueContent] = useState('');
 	const [selectedRepo, setSelectedRepo] = useState('');
@@ -38,7 +43,6 @@ function NewIssueDialog({ repos }: { repos: RepoData[] }) {
 	const [htmlContent, setHtmlContent] = useState('');
 	const togglePreviewMode = () => setPreviewMode(!previewMode);
 	const [repoError, setRepoError] = useState('');
-	const router = useRouter();
 	const createIssues = async () => {
 		setTitleError('');
 		setContentError('');
@@ -73,7 +77,7 @@ function NewIssueDialog({ repos }: { repos: RepoData[] }) {
 			setPreviewMode(false);
 			setHtmlContent('');
 			setOpen(false);
-			router.refresh();
+			onIssueCreated();
 		} catch (error) {
 			console.error('Error creating issue:', error);
 		}

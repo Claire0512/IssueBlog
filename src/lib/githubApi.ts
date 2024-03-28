@@ -118,7 +118,7 @@ export const updateIssue = async ({
 		if (body) requestData.body = body;
 		if (state) requestData.state = state;
 
-		const response = await axios.patch(
+		await axios.patch(
 			`https://api.github.com/repos/${repoOwner}/${repoName}/issues/${issueNumber}`,
 			requestData,
 			{
@@ -128,8 +128,6 @@ export const updateIssue = async ({
 				},
 			},
 		);
-
-		console.log('Issue updated successfully:', response.data);
 	} catch (error) {
 		console.error('Failed to update GitHub issue:', error);
 	}
@@ -240,7 +238,7 @@ export const createIssue = async ({
 	}
 
 	try {
-		const response = await axios.post(
+		await axios.post(
 			`https://api.github.com/repos/${repoOwner}/${repoName}/issues`,
 			{
 				title,
@@ -252,8 +250,6 @@ export const createIssue = async ({
 				},
 			},
 		);
-
-		console.log('Issue created successfully:', response.data);
 	} catch (error) {
 		console.error('Failed to create GitHub issue:', error);
 	}

@@ -121,6 +121,7 @@ export type IssueEditProps = {
 
 export type IssueDetailCardProps = {
 	issueDetails: Omit<IssueDetailsData, 'comment'>;
+	setIssueDetails: (issueDetails: IssueDetailsData) => void;
 };
 
 export type IssueUpdate = {
