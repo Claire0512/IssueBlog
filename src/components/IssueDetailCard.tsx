@@ -58,7 +58,7 @@ function IssueDetailCard({ issueDetails, setIssueDetails }: IssueDetailCardProps
 	}, [issueDetails]);
 
 	return (
-		<div className="flex w-[70%] pb-8">
+		<div className="flex w-full pb-8 sm:w-[70%]">
 			<Image
 				src={issue.avatarUrl}
 				alt="Author's avatar"

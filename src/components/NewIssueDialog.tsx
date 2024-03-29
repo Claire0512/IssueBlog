@@ -100,7 +100,7 @@ function NewIssueDialog({
 					New Post
 				</Button>
 			</DialogTrigger>
-			<DialogContent className="fixed flex min-h-[80%] flex-col  overflow-y-auto bg-white">
+			<DialogContent className="fixed flex min-h-[80%] w-[80%] flex-col  overflow-y-auto bg-white">
 				<DialogHeader className="mx-auto h-full w-[60%] rounded-md p-4 text-center text-2xl  font-bold text-[#412517]">
 					New Post
 				</DialogHeader>
@@ -147,15 +147,20 @@ function NewIssueDialog({
 					/>
 				)}
 				<DialogFooter>
-					<Button
-						onClick={togglePreviewMode}
-						className="w-1/4 bg-[#F9F1E0] text-[#412517]"
-					>
-						{previewMode ? 'Edit' : 'Preview'}
-					</Button>
-					<Button onClick={createIssues} className="w-1/4 bg-[#412517] text-[#F9F1E0]">
-						Submit
-					</Button>
+					<div className="flex justify-end space-x-2">
+						<Button
+							onClick={togglePreviewMode}
+							className="w-1/4 bg-[#F9F1E0] text-[#412517]"
+						>
+							{previewMode ? 'Edit' : 'Preview'}
+						</Button>
+						<Button
+							onClick={createIssues}
+							className="w-1/4 bg-[#412517] text-[#F9F1E0]"
+						>
+							Submit
+						</Button>
+					</div>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

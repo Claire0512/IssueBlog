@@ -9,7 +9,7 @@ import IssueView from './IssueView';
 
 function IssueComment({ comment }: { comment: CommentData }) {
 	return (
-		<div className="flex w-[70%] pb-8">
+		<div className="flex w-full pb-8 sm:w-[70%]">
 			<Image
 				src={comment.user.avatarUrl}
 				alt="Author's avatar"

@@ -78,8 +78,8 @@ function MyPostsPage() {
 	}, [session]);
 
 	return (
-		<div className="flex h-screen w-full flex-col overflow-auto p-40 pb-0 pt-32">
-			<div className="flex-start flex w-[20%] items-center space-x-8">
+		<div className="flex h-screen w-full flex-col overflow-auto pt-32 sm:p-40 sm:pb-0">
+			<div className="flex-start ml-8 flex w-[50%] items-center space-x-8 sm:ml-0 sm:w-[20%]">
 				<h1 className="whitespace-nowrap text-3xl font-bold text-[#412517]">Sort by:</h1>
 				<Select onValueChange={changeSortOption} value={sortOption}>
 					<SelectTrigger
@@ -97,13 +97,15 @@ function MyPostsPage() {
 				</Select>
 			</div>
 			<div
-				className="mx-16 my-8 mb-0 flex flex-1 flex-col gap-3 overflow-auto"
+				className="mx-8 my-8 mb-0 flex flex-1 flex-col gap-3 overflow-auto sm:mx-16"
 				ref={refScroll}
 			>
 				{issues.map((issue, index) => (
-					<div
+					<Link
 						key={index}
-						className="mb-1 flex items-center justify-between rounded-[15px] border bg-white p-6"
+						href={`/post/detail?issueId=${issue.number}&repoName=${issue.repoName}&repoOwner=${issue.repoOwner}`}
+						className="mb-1 flex items-center justify-between rounded-[15px] border bg-white p-2 sm:p-6"
+						prefetch={true}
 					>
 						<div className="flex items-center">
 							<Image
@@ -119,17 +121,17 @@ function MyPostsPage() {
 									{getTimeDifference(issue.created_at)}
 								</div>
 							</div>
-							<p className="ml-8 text-xl font-bold">{issue.title}</p>{' '}
+							<p className="ml-8 text-nowrap text-xl font-bold">{issue.title}</p>{' '}
 						</div>
 
 						<Link
 							href={`/post/detail?issueId=${issue.number}&repoName=${issue.repoName}&repoOwner=${issue.repoOwner}`}
-							className="px-4  py-2 text-lg font-bold text-[#412517]"
+							className="invisible px-4 py-2  text-lg font-bold text-[#412517] sm:visible"
 							prefetch={true}
 						>
 							View More
 						</Link>
-					</div>
+					</Link>
 				))}
 
 				{hasMore && <div>Loading more...</div>}

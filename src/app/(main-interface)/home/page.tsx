@@ -3,8 +3,8 @@ import Image from 'next/image';
 function HomePage() {
 	return (
 		<div className="flex h-full w-full flex-1 items-center justify-center pt-20">
-			<div className="flex h-full w-2/3">
-				<div className="flex w-1/2 justify-center">
+			<div className="flex h-full flex-col sm:w-2/3 sm:flex-row">
+				<div className="flex justify-center sm:w-1/2">
 					<Image
 						src="/author.png"
 						alt="DINU the Dog"
@@ -14,7 +14,7 @@ function HomePage() {
 					/>
 				</div>
 
-				<div className="flex w-1/2 flex-col justify-center space-y-8 pe-12">
+				<div className="flex flex-col justify-center space-y-8 p-8 sm:w-1/2 sm:p-0 sm:pe-12">
 					<h1 className="text-4xl font-bold" style={{ color: '#412517' }}>
 						DINU 狗
 					</h1>

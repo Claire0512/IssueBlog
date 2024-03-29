@@ -48,8 +48,8 @@ function ProfilePage() {
 					)}
 				</div>
 				{session?.username === process.env.NEXT_PUBLIC_AUTHOR_GITHUB_USERNAME && (
-					<div className="mt-8 flex w-full items-center justify-center gap-4">
-						<Card className="w-[14%]">
+					<div className="mt-8 flex w-full flex-col items-center justify-center gap-4 sm:flex-row">
+						<Card className="w-[60%] sm:w-[14%]">
 							<CardContent className="rounded-xl border-l-[16px] border-[#FAC13E] bg-white">
 								<CardHeader className="text-center text-xl text-[#412517]">
 									發布的文章
@@ -59,7 +59,7 @@ function ProfilePage() {
 								</p>
 							</CardContent>
 						</Card>
-						<Card className="w-[14%]">
+						<Card className="w-[60%] sm:w-[14%]">
 							<CardContent className="rounded-xl border-l-[16px] border-[#FAC13E] bg-white">
 								<CardHeader className="text-center text-xl text-[#412517]">
 									文章被留言
@@ -69,7 +69,7 @@ function ProfilePage() {
 								</p>
 							</CardContent>
 						</Card>
-						<Card className="w-[14%]">
+						<Card className="w-[60%] sm:w-[14%]">
 							<CardContent className="rounded-xl border-l-[16px] border-[#FAC13E] bg-white">
 								<CardHeader className="text-center text-xl text-[#412517]">
 									獲得的表情

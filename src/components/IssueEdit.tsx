@@ -52,12 +52,12 @@ function IssueEdit({
 						id="issue-content"
 						value={editedContent}
 						onChange={(e) => setEditedContent(e.target.value)}
-						className="content-textarea w-full break-words"
+						className="content-textarea h-40 w-full break-words"
 						placeholder="Enter markdown content here"
 					/>
 				)}
 			</div>
-			<div className="flex justify-end gap-4">
+			<div className="mb-4 mr-4 flex justify-end gap-4">
 				<button
 					onClick={() => handleSaveClick(editedTitle, editedContent)}
 					disabled={!editedTitle.trim()}
