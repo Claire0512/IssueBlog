@@ -1,15 +1,16 @@
 # IssueBlog
 
 ![image](/public/root.png)
-這個網站是一個以　GitHub Issues　為基礎的個人部落格系統，特別設計來展示和管理個人的 Issues。透過 GitHub OAuth 進行身份驗證，允許一般訪客和作者訪問和互動網站。並利用 GitHub API 實現了文章的管理功能，包括發布、編輯和刪除文章。此外，網站採用現代的前端技術棧，包括 Next.js、TypeScript 和 TailwindCSS，以及多種開源 UI 組件庫，提供了一個響應式且用戶友好的界面。
 
-為了更豐富的展現網站功能，如 UI/UX 設計、無限滾動、統計數據展示等，網站部署版本以 DINU ，來自 Dttofriends 的一個角色，作為虛擬的作者，並建立了一個對應的　GitHub　帳號。
+這個網站是一個以 **GitHub Issues** 為基礎的個人部落格系統，特別設計來展示和管理個人的 Issues。透過 **GitHub OAuth** 進行身份驗證，允許一般訪客和作者訪問和互動網站。並利用 **GitHub API** 實現了文章的管理功能，包括發布、編輯和刪除文章。此外，網站採用現代的前端技術棧，包括 **Next.js**、**TypeScript** 和 **TailwindCSS**，以及多種開源 UI 組件庫，提供了一個響應式且用戶友好的界面。
 
-網站連結：https://dinu-blog.vercel.app/
+為了更豐富的展現網站功能，如 **UI/UX 設計、無限滾動、統計數據展示**等，網站部署版本以 **DINU**，來自 **Dttofriends** 的一個角色，作為虛擬的作者，並建立了一個對應的 **GitHub** 帳號。
 
-作者帳號：https://github.com/dinu1215
+**網站連結**：https://dinu-blog.vercel.app/ 。
 
-將這個專案 clone 到本地後，可以通過修改環境變數，將作者替換成任意的 GitHub 用戶。
+**作者帳號**：https://github.com/dinu1215/ 。
+
+將這個專案 clone 到本地後，可以通過修改環境變數，將作者替換成任意的 **GitHub** 用戶。
 
 ## 網站說明
 
@@ -111,6 +112,6 @@ yarn start
 
 ## 網站圖片來源
 
-Dttofriends Instagram 粉專 https://www.instagram.com/dttofriends/
+Dttofriends Instagram 粉專：https://www.instagram.com/dttofriends/
 
-Dttofriends 官方網站 https://store.dttofriends.com/
+Dttofriends 官方網站：https://store.dttofriends.com/
