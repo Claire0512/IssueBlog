@@ -54,7 +54,7 @@ function IssueDetailCard({ issueDetails, setIssueDetails }: IssueDetailCardProps
 		setIsEditing(false);
 		setTimeout(() => {
 			router.push('/post');
-		}, 3000);
+		}, 2000);
 	};
 
 	return (

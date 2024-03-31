@@ -50,7 +50,7 @@ function MyPostsPage() {
 			setIssues([]);
 			setHasMore(true);
 			setRefreshKey((prevKey) => prevKey + 1);
-		}, 3000);
+		}, 2000);
 	};
 
 	useEffect(() => {
