@@ -44,7 +44,7 @@
 
 -   [x] 使⽤ TypeScript
 -   [x] Next.js + App Router
--   [x] 調校 Web Vitals 評分：使用 PageSpeed Insights
+-   [x] 調校 Web Vitals 評分：使用 PageSpeed Insights 進行評分，有透過 asynchronous requests 加速 fetch 資料的速度，以及使用 Next.js Image Optimization 的技術加速圖片載入的速度
         ![image](/public/analysis.png)
 -   [x] 處理錯誤及例外狀況 (Error Handling)
         ![image](/public/errorHandling.png)

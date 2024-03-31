@@ -45,10 +45,12 @@ function MyPostsPage() {
 	};
 
 	const refreshIssues = () => {
-		setPage(1);
-		setIssues([]);
-		setHasMore(true);
-		setRefreshKey((prevKey) => prevKey + 1);
+		setTimeout(() => {
+			setPage(1);
+			setIssues([]);
+			setHasMore(true);
+			setRefreshKey((prevKey) => prevKey + 1);
+		}, 3000);
 	};
 
 	useEffect(() => {
