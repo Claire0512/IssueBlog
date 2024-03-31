@@ -180,7 +180,7 @@ export const fetchGithubData = async (): Promise<IssueStatistic> => {
 
 	try {
 		const issuesResponse = await axios.get(
-			`https://api.github.com/search/issues?q=author:${process.env.NEXT_PUBLIC_AUTHOR_GITHUB_USERNAME}+is:issue+user:${process.env.NEXT_PUBLIC_AUTHOR_GITHUB_USERNAME}&sort=created&order=desc`,
+			`https://api.github.com/search/issues?q=author:${process.env.NEXT_PUBLIC_AUTHOR_GITHUB_USERNAME}+is:issue+user:${process.env.NEXT_PUBLIC_AUTHOR_GITHUB_USERNAME}+state:open&sort=created&order=desc`,
 			{
 				headers: {
 					Authorization: `token ${process.env.AUTHOR_GITHUB_PAT}`,
